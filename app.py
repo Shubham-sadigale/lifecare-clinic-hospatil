@@ -2,12 +2,12 @@ import os
 import re
 import threading
 import sqlite3
-import smtplib
-from email.mime.text import MIMEText
 from datetime import datetime
 
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from werkzeug.security import generate_password_hash, check_password_hash
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
 
 
 # =========================
@@ -17,7 +17,6 @@ app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "change-this-in-production-very-strong-secret-key")
 
 DB_NAME = os.environ.get("DB_NAME", "shubham_hospital4.db")
-
 ALLOWED_STATUSES = {"Pending", "Approved", "Cancelled"}
 
 
@@ -78,36 +77,37 @@ def safe_strip(value):
 
 def send_email(to_email, subject, body):
     try:
+        api_key = os.environ.get("SENDGRID_API_KEY")
         sender_email = os.environ.get("SENDER_EMAIL")
-        sender_password = os.environ.get("SENDER_PASSWORD")
 
-        print("=== EMAIL DEBUG START ===")
+        print("=== SENDGRID EMAIL DEBUG START ===")
         print("TO EMAIL:", to_email)
         print("SENDER EMAIL:", sender_email)
-        print("PASSWORD EXISTS:", bool(sender_password))
+        print("API KEY EXISTS:", bool(api_key))
 
-        if not sender_email or not sender_password:
-            print("❌ Email credentials missing.")
-            print("=== EMAIL DEBUG END ===")
+        if not api_key or not sender_email:
+            print("❌ SendGrid credentials missing.")
+            print("=== SENDGRID EMAIL DEBUG END ===")
             return False
 
-        msg = MIMEText(body)
-        msg["Subject"] = subject
-        msg["From"] = sender_email
-        msg["To"] = to_email
+        message = Mail(
+            from_email=sender_email,
+            to_emails=to_email,
+            subject=subject,
+            plain_text_content=body
+        )
 
-        with smtplib.SMTP("smtp.gmail.com", 587, timeout=10) as server:
-            server.starttls()
-            server.login(sender_email, sender_password)
-            server.send_message(msg)
+        sg = SendGridAPIClient(api_key)
+        response = sg.send(message)
 
-        print("✅ Email sent to", to_email)
-        print("=== EMAIL DEBUG END ===")
+        print("✅ SendGrid email sent to", to_email)
+        print("STATUS CODE:", response.status_code)
+        print("=== SENDGRID EMAIL DEBUG END ===")
         return True
 
     except Exception as e:
-        print("❌ Email error:", e)
-        print("=== EMAIL DEBUG END ===")
+        print("❌ SendGrid email error:", e)
+        print("=== SENDGRID EMAIL DEBUG END ===")
         return False
 
 

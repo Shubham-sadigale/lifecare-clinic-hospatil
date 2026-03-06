@@ -60,11 +60,19 @@ def is_valid_date(date_text):
 
 
 def is_valid_time(time_text):
-    try:
-        datetime.strptime(time_text, "%H:%M")
-        return True
-    except ValueError:
+    if not time_text:
         return False
+
+    time_text = time_text.strip()
+
+    for fmt in ("%I:%M %p", "%H:%M", "%H:%M:%S"):
+        try:
+            datetime.strptime(time_text, fmt)
+            return True
+        except ValueError:
+            continue
+
+    return False
 
 
 def safe_strip(value):
@@ -154,7 +162,7 @@ def init_db():
             )
         """)
 
-        cursor.execute("SELECT id FROM admins WHERE email = ?", (DEFAULT_ADMIN_EMAIL,))
+        cursor.execute("SELECT id FROM admins WHERE email = ?", (DEFAULT_ADMIN_EMAIL.strip().lower(),))
         admin = cursor.fetchone()
 
         if admin is None and DEFAULT_ADMIN_EMAIL and DEFAULT_ADMIN_PASSWORD:

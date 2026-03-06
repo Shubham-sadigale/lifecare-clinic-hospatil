@@ -1,5 +1,6 @@
 import os
 import re
+import threading
 import sqlite3
 import smtplib
 from email.mime.text import MIMEText
@@ -95,7 +96,7 @@ def send_email(to_email, subject, body):
         msg["From"] = sender_email
         msg["To"] = to_email
 
-        with smtplib.SMTP("smtp.gmail.com", 587, timeout=20) as server:
+        with smtplib.SMTP("smtp.gmail.com", 587, timeout=10) as server:
             server.starttls()
             server.login(sender_email, sender_password)
             server.send_message(msg)
@@ -108,6 +109,14 @@ def send_email(to_email, subject, body):
         print("❌ Email error:", e)
         print("=== EMAIL DEBUG END ===")
         return False
+
+
+def send_email_async(to_email, subject, body):
+    threading.Thread(
+        target=send_email,
+        args=(to_email, subject, body),
+        daemon=True
+    ).start()
 
 
 # =========================
@@ -256,7 +265,7 @@ def appointments():
             flash("Something went wrong while booking appointment.", "error")
             return redirect(url_for("appointments"))
 
-        subject = "📅 Appointment Request Received - LifeCare Clinic"
+        subject = "Appointment Request Received - LifeCare Clinic"
         body = f"""Hello {data['firstname']} {data['lastname']},
 
 Your appointment request has been received.
@@ -273,9 +282,9 @@ Our admin will review your request shortly.
 Thank you,
 LifeCare Clinic
 """
-        send_email(data["email"], subject, body)
+        send_email_async(data["email"], subject, body)
 
-        flash("📅 Appointment request sent!", "appointment")
+        flash("Appointment request sent!", "appointment")
         return redirect(url_for("home"))
 
     return render_template("appointment.html")
@@ -322,7 +331,7 @@ def contact():
             flash("Something went wrong while sending message.", "error")
             return redirect(url_for("contact"))
 
-        flash("📤 Message successfully sent!", "message")
+        flash("Message successfully sent!", "message")
         return redirect(url_for("contact"))
 
     return render_template("contact.html")
@@ -347,10 +356,10 @@ def login():
             if user and check_password_hash(user["password"], password):
                 session.clear()
                 session["user"] = user["name"]
-                flash("✅ Login successful!", "success")
+                flash("Login successful!", "success")
                 return redirect(url_for("home"))
 
-            flash("❌ Invalid credentials", "error")
+            flash("Invalid credentials", "error")
             return redirect(url_for("login"))
 
         except sqlite3.Error as e:
@@ -396,7 +405,7 @@ def signup():
                 )
                 conn.commit()
 
-            flash("👤 Account created!", "account")
+            flash("Account created!", "account")
             return redirect(url_for("login"))
 
         except sqlite3.IntegrityError:
@@ -423,7 +432,7 @@ def logout():
 @app.route("/dashboard")
 def dashboard():
     if not session.get("admin_logged_in"):
-        flash("⚠️ Admin login required", "error")
+        flash("Admin login required", "error")
         return redirect(url_for("admin_login"))
 
     search = safe_strip(request.args.get("search"))
@@ -477,7 +486,7 @@ def dashboard():
 @app.route("/dashboard/messages")
 def messages():
     if not session.get("admin_logged_in"):
-        flash("⛔ Admin access required", "m-error")
+        flash("Admin access required", "m-error")
         return redirect(url_for("admin_login"))
 
     try:
@@ -497,7 +506,7 @@ def messages():
 @app.route("/dashboard/adddoctor")
 def adddoctor():
     if not session.get("admin_logged_in"):
-        flash("⛔ Admin access required", "m-error")
+        flash("Admin access required", "m-error")
         return redirect(url_for("admin_login"))
 
     return render_template("adddoctor.html")
@@ -524,15 +533,15 @@ def admin_login():
                 session["admin_logged_in"] = True
                 session["admin_email"] = admin["email"]
                 session["admin_name"] = admin["fullname"]
-                flash("✅ Admin login successful!", "in-success")
+                flash("Admin login successful!", "in-success")
                 return redirect(url_for("dashboard"))
 
-            flash("❌ Invalid admin credentials", "in-error")
+            flash("Invalid admin credentials", "in-error")
             return redirect(url_for("admin_login"))
 
         except sqlite3.Error as e:
             print("Admin login DB error:", e)
-            flash("❌ Admin login failed.", "in-error")
+            flash("Admin login failed.", "in-error")
             return redirect(url_for("admin_login"))
 
     return render_template("admin-login.html")
@@ -568,16 +577,16 @@ def admin_signup():
                 )
                 conn.commit()
 
-            flash("✅ Admin account created!", "up-success")
+            flash("Admin account created!", "up-success")
             return redirect(url_for("admin_login"))
 
         except sqlite3.IntegrityError:
-            flash("❌ Admin email already registered!", "up-error")
+            flash("Admin email already registered!", "up-error")
             return redirect(url_for("admin_signup"))
 
         except sqlite3.Error as e:
             print("Admin signup DB error:", e)
-            flash("❌ Something went wrong during admin signup.", "up-error")
+            flash("Something went wrong during admin signup.", "up-error")
             return redirect(url_for("admin_signup"))
 
     return render_template("admin-signup.html")
@@ -586,14 +595,14 @@ def admin_signup():
 @app.route("/admin-logout")
 def admin_logout():
     session.clear()
-    flash("🔐 Logged out from Admin.", "info")
+    flash("Logged out from Admin.", "info")
     return redirect(url_for("admin_login"))
 
 
 @app.route("/update_status/<int:id>", methods=["POST"])
 def update_status(id):
     if not session.get("admin_logged_in"):
-        flash("⚠️ Admin login required", "error")
+        flash("Admin login required", "error")
         return redirect(url_for("admin_login"))
 
     new_status = safe_strip(request.form.get("status"))
@@ -625,7 +634,7 @@ def update_status(id):
 
         if email:
             if new_status == "Approved":
-                subject = "✅ Appointment Approved - LifeCare Clinic"
+                subject = "Appointment Approved - LifeCare Clinic"
                 body = f"""Hello {appointment['firstname']} {appointment['lastname']},
 
 Your appointment has been approved.
@@ -638,10 +647,10 @@ Status: {new_status}
 Thank you,
 LifeCare Clinic
 """
-                send_email(email, subject, body)
+                send_email_async(email, subject, body)
 
             elif new_status == "Cancelled":
-                subject = "❌ Appointment Cancelled - LifeCare Clinic"
+                subject = "Appointment Cancelled - LifeCare Clinic"
                 body = f"""Hello {appointment['firstname']} {appointment['lastname']},
 
 Your appointment has been cancelled.
@@ -654,7 +663,7 @@ Status: {new_status}
 Thank you,
 LifeCare Clinic
 """
-                send_email(email, subject, body)
+                send_email_async(email, subject, body)
 
         flash("Status updated", "s-updated")
         return redirect(url_for("dashboard"))
@@ -668,7 +677,7 @@ LifeCare Clinic
 @app.route("/delete_appointment/<int:id>", methods=["POST"])
 def delete_appointment(id):
     if not session.get("admin_logged_in"):
-        flash("⚠️ Admin login required", "error")
+        flash("Admin login required", "error")
         return redirect(url_for("admin_login"))
 
     try:

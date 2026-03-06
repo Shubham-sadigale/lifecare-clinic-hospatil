@@ -1,0 +1,439 @@
+@import url("https://fonts.googleapis.com/css2?family=Questrial&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  background-color: rgba(255, 255, 255);
+  color: #222;
+}
+
+:root {
+  --main: #9b87f5;
+  --sec: #1a1f2c;
+  --third: #f5f2ff;
+  --four:#f5f2ff49;
+}
+
+/* Navigation Bar */
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.1); /* Semi-transparent white */
+  padding: 18px 30px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px); /* Applies the blur effect */
+  -webkit-backdrop-filter: blur(10px); /* Safari support */
+  z-index: 999;
+  margin: 20px 30px;
+}
+
+.logo h1 span {
+  color: var(--main);
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+}
+
+.nav-links li {
+  margin: 0 15px;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #444;
+  font-size: 16px;
+  padding: 8px 15px;
+  border-radius: 5px;
+  transition: 0.3s ease;
+}
+
+.nav-links a:hover {
+  color: var(--main);
+}
+
+.btn{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    
+}
+
+.btn #login-btn{
+  background-color: var(--main);
+  padding: 7px 16px;
+  border-radius: 6px;
+  padding-left: 2rem;
+}
+
+.btn #logout-btn{
+  background-color: var(--main);
+  padding: 7px 16px;
+  border-radius: 6px;
+  padding-left: 2rem;
+}
+
+
+
+.btn #login{
+  position: absolute;
+    font-size: 1.1rem;
+    color: #ffffff;
+    right: 225px;
+    
+}
+
+.btn #logout{
+  position: absolute;
+    font-size: 1.3rem;
+    color: #ffffff;
+    right: 115px;;
+}
+
+
+
+.btn ul{
+    list-style-type: none;
+    display: flex;
+    margin: 0;
+  padding: 0;
+}
+
+.btn ul li {
+  margin: 0 8px; /* Adds spacing between Log In and Logout */
+}
+
+.btn ul li a{
+    text-decoration: none;
+    font-size: 1.1rem;
+    color: #ffffff;
+    cursor: pointer;
+}
+
+
+
+
+
+/*Footer Styling*/
+
+
+.foot2 {
+  width: 100%;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.7;
+}
+
+.foot1 .col4 .loca {
+  display: flex;
+}
+
+.foot1 .divide .col4 .loca p {
+  margin-left: 8px;
+}
+
+.foot1 .divide .col4 .call {
+  display: flex;
+}
+
+.foot1 .divide .col4 .call p {
+  margin-left: 8px;
+}
+
+.foot1 .divide .col4 .mail {
+  display: flex;
+}
+
+.foot1 .divide .col4 .mail p {
+  margin-left: 8px;
+}
+
+.foot1 .divide .col4 .time {
+  display: flex;
+}
+
+.foot1 .divide .col4 .time p {
+  margin-left: 8px;
+}
+
+.foot1 {
+  width: 100%;
+  padding-top: 40px;
+
+  padding-bottom: 20px;
+}
+
+.foot1 .divide {
+  padding: 0px 40px;
+  display: flex;
+  justify-content: space-evenly;
+  opacity: 1;
+}
+
+.foot1 .divide .col1 h3 {
+  font-size: 1.5rem;
+}
+
+.foot1 .divide .col1 h3 span {
+  color: var(--main);
+}
+
+.foot1 .divide .col1 p {
+  opacity: 0.8;
+}
+
+.foot1 .divide .col2 h4 {
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.foot1 .divide .col2 li {
+  list-style-type: none;
+  padding: 8px 0px;
+}
+
+.foot1 .divide .col2 li a {
+  text-decoration: none;
+  color: var(--sec);
+  opacity: 0.8;
+}
+
+.foot1 .divide .col2 li a:hover {
+  color: var(--main);
+  transition: 0.2s all ease-in-out;
+}
+
+.foot1 .divide .col3 h4 {
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.foot1 .divide .col3 li {
+  list-style-type: none;
+  padding: 8px 0px;
+}
+
+.foot1 .divide .col3 li:hover {
+  color: var(--main);
+  transition: 0.2s all ease-in-out;
+}
+
+.foot1 .divide .col4 h4 {
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+
+.foot1 .divide .col4 .loca .icon3 {
+  color: var(--main);
+  font-size: 1.2rem;
+  padding-top: 13px;
+}
+
+.foot1 .divide .col4 .call .icon3 {
+  color: var(--main);
+  font-size: 1.2rem;
+  padding-top: 13px;
+}
+
+.foot1 .divide .col4 .mail .icon3 {
+  color: var(--main);
+  font-size: 1.2rem;
+  padding-top: 13px;
+}
+
+.foot1 .divide .col4 .time .icon3 {
+  color: var(--main);
+  font-size: 1.2rem;
+  padding-top: 13px;
+}
+
+.foot1 .divide .col4 .loca p {
+  font-size: 1rem;
+  padding-top: 15px;
+}
+
+.foot1 .divide .col4 .call p {
+  font-size: 1rem;
+  padding-top: 15px;
+}
+
+.foot1 .divide .col4 .mail p {
+  font-size: 1rem;
+  padding-top: 15px;
+}
+
+.foot1 .divide .col4 .time p {
+  font-size: 1rem;
+  padding-top: 15px;
+}
+
+footer hr {
+  width: 80%; /* Or 100% if it's inside container */
+  margin: 0rem 10rem auto; /* Center it */
+  border: none;
+  border-top: 1px solid #ccc;
+}
+
+  
+
+/*Doctor Stying*/
+
+.content{
+    background-color: var(--third);
+    margin-bottom: 1rem;
+}
+
+.text{
+    text-align: center;
+    padding: 6rem;
+    font-size: 2.1rem;
+}
+
+.content .text p{
+    font-size: 1rem;
+    opacity: 0.7;
+    padding: 10px 0px;
+}
+
+
+
+
+.container{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(390px, 395px));
+    gap: 25px;
+    margin: 0.6rem 0px;
+    margin-bottom: 4rem;
+    align-items: center;
+    justify-content: center;
+}
+
+ .container .box{
+  max-width: 390px;
+    border-radius: 10px;
+    box-shadow: 0px 10px 20px solid rgba(86, 78, 78, 0.5);
+    border: 1px solid rgba(139, 139, 139, 0.232);
+    padding: 0px 0px;
+    text-align: left;
+}
+
+.container .box img{
+    width: 60%;
+    height: 200px;
+    border-radius: 60%;
+    border: 12px solid --sec;
+}
+
+#photo{
+  display: flex;
+  justify-content: center;
+  padding: 20px 0px;
+  background-color: #9b87f539;
+  border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+}
+
+#photo .ph2{
+  border: 2px solid rgba(139, 139, 139, 0.823);;
+}
+
+.container .box .info {
+    padding: 10px 20px;
+
+}
+
+.container .box .info h5{
+  padding: 10px 0px;
+}
+
+.container .box .last{
+    display: flex;
+    justify-content:flex-start;
+    margin-bottom: 1rem;
+    margin-top: 0.6rem;
+    align-items: center;
+}
+
+.container .box .last p{
+    margin-right: 5.9rem;
+}
+
+.container .box .last button{
+    padding: 10px 18px;
+    border: 1px solid #9b87f5;
+    color: #9b87f5;
+    background-color: #fff;
+    border-radius: 10px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor:pointer;
+}
+
+.container .box .last button:hover{
+  background-color: #b9b7b745;
+  color: #544985;
+}
+
+
+.contain {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 210px;
+  margin-top: 6rem;
+  margin-bottom: 3rem;
+}
+
+.contain .search-box {
+  position: relative;
+  width: 600px;
+  padding: 10px;
+  padding-left: 2.5rem;
+  border-radius: 6px;
+  border: 1px solid #bfbcbc;
+  margin-right: 15px;
+  transition: border 0.2s ease;
+}
+
+.contain .search-box:focus {
+  border: 2px solid #9b87f5;
+  outline: none;
+}
+
+.contain #specialty-filter {
+  width: 400px;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #bfbcbc;
+  margin-left: 5px;
+  transition: border 0.2s ease;
+}
+
+.contain #specialty-filter:focus {
+  border: 2px solid #9b87f5;
+  outline: none;
+}
+
+.contain i{
+  position: absolute;
+  top: 71.8%;
+  left: 10.4%;
+  z-index: 100;
+  color: rgba(128, 128, 128, 0.536);
+  font-size: 1.1rem;
+}

@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🧑🏼‍⚕️LifeCare Clinic</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet" />
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+
+    <style>
+        .popup {
+            display: none;
+            position: fixed;
+            top: 120px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 5px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            z-index: 9999;
+            font-weight: bold;
+            animation: fadein 0.5s;
+            border: 1px solid #333;
+        }
+
+        .popup.success {
+            background-color: #ffffff;
+            color: black;
+        }
+
+        .popup.appointment {
+            background-color: #ffffff;
+            color: black;
+        }
+
+        @keyframes fadein {
+            from {
+                opacity: 0;
+                top: 60px;
+            }
+            to {
+                opacity: 1;
+                top: 120px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    <div class="popup {{ category }}">
+        {{ message }}
+    </div>
+    {% endfor %}
+
+    <script>
+        const popups = document.querySelectorAll('.popup');
+        popups.forEach(popup => {
+            popup.style.display = "block";
+            setTimeout(() => {
+                popup.style.display = "none";
+            }, 3000);
+        });
+    </script>
+    {% endif %}
+    {% endwith %}
+
+    <header>
+        <nav>
+            <div class="logo">
+                <h1>LifeCare <span>Clinic</span></h1>
+            </div>
+
+            <ul class="nav-links">
+                <li><a href="{{ url_for('home') }}">Home</a></li>
+                <li><a href="{{ url_for('about_us') }}">About</a></li>
+                <li><a href="{{ url_for('doctors') }}">Doctors</a></li>
+                <li><a href="{{ url_for('appointments') }}">Appointments</a></li>
+                <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
+            </ul>
+
+            <div class="btn">
+                <i id="login" class='bx bx-user bx-flashing'></i>
+                <ul>
+                    <li><a href="{{ url_for('login') }}" id="login-btn">Log In</a></li>
+                    <li><a href="{{ url_for('logout') }}" id="logout-btn">Logout</a></li>
+                </ul>
+                <i id="logout" class='bx bx-log-out bx-flashing'></i>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-text">
+                <h1>Your Health Is Our <br /><span>Priority</span></h1>
+                <p class="tagline">
+                    Providing compassionate and comprehensive healthcare with state of the art facilities and experienced professionals.
+                </p>
+                <a class="appointment-btn" href="{{ url_for('appointments') }}">Book an Appointment</a>
+                <a href="{{ url_for('doctors') }}" class="doctors-btn">Our Doctors</a>
+            </div>
+
+            <div class="hero-image">
+                <img src="{{ url_for('static', filename='images/organic-flat-doctors-nurses.svg') }}" alt="Doctors Illustration" />
+            </div>
+        </section>
+
+        <section>
+            <div class="main2">
+                <div class="content">
+                    <div class="text">
+                        <h3>Why Choose <span> LifeCare Clinic</span></h3>
+                    </div>
+
+                    <div class="grid">
+                        <div class="grid-items">
+                            <div class="icon"><i class="ri-nurse-line"></i></div>
+                            <h4>Experienced Doctors</h4>
+                            <p>
+                                Our team of experienced and qualified medical professionals are dedicated to your care.
+                            </p>
+                        </div>
+
+                        <div class="grid-items">
+                            <div class="icon"><i class="ri-calendar-line"></i></div>
+                            <h4>Easy Appointments</h4>
+                            <p>
+                                Book appointments online or via phone at your convenience, 24/7.
+                            </p>
+                        </div>
+
+                        <div class="grid-items">
+                            <div class="icon"><i class="ri-time-line"></i></div>
+                            <h4>Timely Service</h4>
+                            <p>
+                                We value your time and strive to provide prompt medical services.
+                            </p>
+                        </div>
+
+                        <div class="grid-items">
+                            <div class="icon"><i class="ri-shield-line"></i></div>
+                            <h4>Modern Technology</h4>
+                            <p>
+                                State of the art medical equipment and facilities for accurate diagnosis.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="main3">
+                <div class="content2">
+                    <div class="text2">
+                        <h3>Our Services</h3>
+                        <p>
+                            We offer a comprehensive range of healthcare services to meet all your medical needs under one roof.
+                        </p>
+                    </div>
+
+                    <div class="grid2">
+                        <div class="grid-items2">
+                            <h4>General Medicine</h4>
+                            <p>
+                                Comprehensive healthcare for adults including preventive care, diagnosis and treatment of various conditions.
+                            </p>
+                            <div class="icon2">
+                                <a target="_blank" href="https://www.kalpavrikshamtrust.com/centre-of-excellence/general-medicine#:~:text=General%20Medicine%20is%20a%20speciality,diseases%20from%20head%20to%20toe.">Learn more</a>
+                                <i class="ri-arrow-right-line"></i>
+                            </div>
+                        </div>
+
+                        <div class="grid-items2">
+                            <h4>Pediatric Care</h4>
+                            <p>
+                                Specialized healthcare services for infants, child, children, and adolescents focusing on their
+                            </p>
+                            <div class="icon2">
+                                <a href="#">Learn more</a>
+                                <i class="ri-arrow-right-line"></i>
+                            </div>
+                        </div>
+
+                        <div class="grid-items2">
+                            <h4>Specialist Consultation</h4>
+                            <p>
+                                Access to specialists in cardiology, dermatology, orthopedics, neurology, and more.
+                            </p>
+                            <div class="icon2">
+                                <a href="#">Learn more</a>
+                                <i class="ri-arrow-right-line"></i>
+                            </div>
+                        </div>
+
+                        <div class="grid-items2">
+                            <h4>Laboratory Services</h4>
+                            <p>
+                                Advanced diagnostic testing and comprehensive laboratory services for accurate diagnosis and effective treatment.
+                            </p>
+                            <div class="icon2">
+                                <a href="#">Learn more</a>
+                                <i class="ri-arrow-right-line"></i>
+                            </div>
+                        </div>
+
+                        <div class="grid-items2">
+                            <h4>Women's Health</h4>
+                            <p>
+                                Specialized care for women including prenatal care, gynecology, and reproductive health services.
+                            </p>
+                            <div class="icon2">
+                                <a href="#">Learn more</a>
+                                <i class="ri-arrow-right-line"></i>
+                            </div>
+                        </div>
+
+                        <div class="grid-items2">
+                            <h4>Emergency Care</h4>
+                            <p>
+                                Prompt and effective emergency medical care for critical urgent health concerns and serious physical injuries.
+                            </p>
+                            <div class="icon2">
+                                <a href="#">Learn more</a>
+                                <i class="ri-arrow-right-line"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="main4">
+                <div class="text3">
+                    <h3>Ready to schedule your visit?</h3>
+                    <p>
+                        Book an appointment with one of our healthcare professionals today and take the first step
+                    </p>
+                    <p class="p2">towards better health.</p>
+                    <a href="{{ url_for('appointments') }}">Book an Appointment</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="foot1">
+            <div class="divide">
+                <div class="col1">
+                    <h3><span>LifeCare</span> Clinic</h3>
+                    <p>
+                        Providing quality healthcare services <br>with a personal touch since 2005.
+                    </p>
+                </div>
+
+                <div class="col2">
+                    <h4>Quick Links</h4>
+                    <li><a href="{{ url_for('home') }}">Home</a></li>
+                    <li><a href="{{ url_for('about_us') }}">About Us</a></li>
+                    <li><a href="{{ url_for('doctors') }}">Our Doctors</a></li>
+                    <li><a href="{{ url_for('appointments') }}">Book Appointment</a></li>
+                    <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
+                </div>
+
+                <div class="col3">
+                    <h4>Services</h4>
+                    <li>General Checkup</li>
+                    <li>Specialist Consultation</li>
+                    <li>Pediatric Care</li>
+                    <li>Emergency Services</li>
+                    <li>Laboratory Tests</li>
+                </div>
+
+                <div class="col4">
+                    <h4>Contact Us</h4>
+                    <div class="loca">
+                        <div class="icon3"><i class="ri-map-pin-line"></i></div>
+                        <p>123 Medical Center Dr, Healthcare City</p>
+                    </div>
+                    <div class="call">
+                        <div class="icon3"><i class="ri-phone-line"></i></div>
+                        <p>+1 (555) 123-4567</p>
+                    </div>
+                    <div class="mail">
+                        <div class="icon3"><i class="ri-mail-line"></i></div>
+                        <p>info@LifeCareclinic.com</p>
+                    </div>
+                    <div class="time">
+                        <div class="icon3"><i class="ri-time-line"></i></div>
+                        <p>Mon-Fri: 8am-7pm, Sat: 9am-5pm</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="foot2">
+            <p>© 2026 LifeCare Clinic.| All rights reserved.| Shubhzzz..</p>
+        </div>
+    </footer>
+
+</body>
+</html>

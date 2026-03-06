@@ -1,0 +1,539 @@
+@import url("https://fonts.googleapis.com/css2?family=Questrial&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  height: 100%;
+  width: 100%;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  background-color: rgba(255, 255, 255);
+  color: #222;
+}
+
+:root {
+  --main: #9b87f5;
+  --sec: #1a1f2c;
+  --third: #f5f2ff;
+}
+
+/* Navigation Bar */
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.1); /* Semi-transparent white */
+  padding: 18px 30px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px); /* Applies the blur effect */
+  -webkit-backdrop-filter: blur(10px); /* Safari support */
+  z-index: 999;
+  margin: 20px 30px;
+}
+
+.logo h1 span {
+  color: var(--main);
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+}
+
+.nav-links li {
+  margin: 0 15px;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #444;
+  font-size: 16px;
+  padding: 8px 15px;
+  border-radius: 5px;
+  transition: 0.3s ease;
+}
+
+.nav-links a:hover {
+  color: var(--main);
+}
+
+.btn{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    
+}
+
+.btn #login-btn{
+  background-color: var(--main);
+  padding: 7px 16px;
+  border-radius: 6px;
+  padding-left: 2rem;
+}
+
+.btn #logout-btn{
+  background-color: var(--main);
+  padding: 7px 16px;
+  border-radius: 6px;
+  padding-left: 2rem;
+}
+
+
+
+.btn #login{
+  position: absolute;
+    font-size: 1.1rem;
+    color: #ffffff;
+    right: 225px;
+    
+}
+
+.btn #logout{
+  position: absolute;
+    font-size: 1.3rem;
+    color: #ffffff;
+    right: 115px;;
+}
+
+
+
+.btn ul{
+    list-style-type: none;
+    display: flex;
+    margin: 0;
+  padding: 0;
+}
+
+.btn ul li {
+  margin: 0 8px; /* Adds spacing between Log In and Logout */
+}
+
+.btn ul li a{
+    text-decoration: none;
+    font-size: 1.1rem;
+    color: #ffffff;
+    cursor: pointer;
+}
+
+
+/*Footer Section*/
+
+.foot2 {
+  width: 100%;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.7;
+}
+
+.foot1 .col4 .loca {
+  display: flex;
+}
+
+.foot1 .divide .col4 .loca p {
+  margin-left: 8px;
+}
+
+.foot1 .divide .col4 .call {
+  display: flex;
+}
+
+.foot1 .divide .col4 .call p {
+  margin-left: 8px;
+}
+
+.foot1 .divide .col4 .mail {
+  display: flex;
+}
+
+.foot1 .divide .col4 .mail p {
+  margin-left: 8px;
+}
+
+.foot1 .divide .col4 .time {
+  display: flex;
+}
+
+.foot1 .divide .col4 .time p {
+  margin-left: 8px;
+}
+
+.foot1 {
+  width: 100%;
+  padding-top: 40px;
+
+  padding-bottom: 20px;
+}
+
+.foot1 .divide {
+  padding: 0px 40px;
+  display: flex;
+  justify-content: space-evenly;
+  opacity: 1;
+}
+
+.foot1 .divide .col1 h3 {
+  font-size: 1.5rem;
+}
+
+.foot1 .divide .col1 h3 span {
+  color: var(--main);
+}
+
+.foot1 .divide .col1 p {
+  opacity: 0.8;
+}
+
+.foot1 .divide .col2 h4 {
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.foot1 .divide .col2 li {
+  list-style-type: none;
+  padding: 8px 0px;
+}
+
+.foot1 .divide .col2 li a {
+  text-decoration: none;
+  color: var(--sec);
+  opacity: 0.8;
+}
+
+.foot1 .divide .col2 li a:hover {
+  color: var(--main);
+  transition: 0.2s all ease-in-out;
+}
+
+.foot1 .divide .col3 h4 {
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.foot1 .divide .col3 li {
+  list-style-type: none;
+  padding: 8px 0px;
+}
+
+.foot1 .divide .col3 li:hover {
+  color: var(--main);
+  transition: 0.2s all ease-in-out;
+}
+
+.foot1 .divide .col4 h4 {
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.foot1 .divide .col4 .loca .icon3 {
+  color: var(--main);
+  font-size: 1.2rem;
+  padding-top: 13px;
+}
+
+.foot1 .divide .col4 .call .icon3 {
+  color: var(--main);
+  font-size: 1.2rem;
+  padding-top: 13px;
+}
+
+.foot1 .divide .col4 .mail .icon3 {
+  color: var(--main);
+  font-size: 1.2rem;
+  padding-top: 13px;
+}
+
+.foot1 .divide .col4 .time .icon3 {
+  color: var(--main);
+  font-size: 1.2rem;
+  padding-top: 13px;
+}
+
+.foot1 .divide .col4 .loca p {
+  font-size: 1rem;
+  padding-top: 15px;
+}
+
+.foot1 .divide .col4 .call p {
+  font-size: 1rem;
+  padding-top: 15px;
+}
+
+.foot1 .divide .col4 .mail p {
+  font-size: 1rem;
+  padding-top: 15px;
+}
+
+.foot1 .divide .col4 .time p {
+  font-size: 1rem;
+  padding-top: 15px;
+}
+
+footer hr {
+  width: 80%; /* Or 100% if it's inside container */
+  margin: 0rem 10rem auto; /* Center it */
+  border: none;
+  border-top: 1px solid #ccc;
+}
+
+/*Appointment Section*/
+
+.t1 {
+  text-align: center;
+  padding: 6rem;
+  background-color: var(--third);
+}
+
+.t1 p {
+  opacity: 0.8;
+  margin-top: 1rem;
+}
+
+.t1 h1 {
+  color: var(--sec);
+}
+
+.container {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  padding: 4rem;
+}
+
+.form-container {
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0;
+}
+
+.form-container p {
+  opacity: 0.8;
+  margin-bottom: 1.5rem;
+}
+.contact-info h2,
+.form-container h2 {
+  color: var(--sec);
+}
+
+.form-container .firstname {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-container .lastname {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-container .lastname input {
+  width: 300px;
+  margin-top: 0.5rem;
+}
+
+.form-container .firstname input {
+  width: 300px;
+  margin-top: 0.5rem;
+}
+
+.form-container .first-row {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+}
+
+input,
+select,
+textarea {
+  padding: 0.75rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  flex: 1;
+}
+
+.form-container .sec-row {
+  display: flex;
+  padding: 1rem 0rem;
+  gap: 1rem;
+}
+
+.form-container .sec-row .email {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-container .sec-row .number {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-container .sec-row input {
+  width: 300px;
+  margin-top: 0.5rem;
+}
+
+.form-container .doctor {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.3rem;
+}
+
+label {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.form-container .date {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-container .date input {
+  margin-top: 0.5rem;
+}
+
+.form-container .time {
+  display: flex;
+  flex-direction: column;
+  margin: 1rem 0rem;
+}
+
+.form-container .time select {
+  margin-top: 0.5rem;
+}
+
+.form-container .type {
+  display: flex;
+  flex-direction: column;
+  margin: 1rem 0rem;
+}
+
+.form-container .notes {
+  display: flex;
+  flex-direction: column;
+  margin: 1rem 0rem;
+}
+
+.form-container .notes textarea {
+  margin-top: 0.5rem;
+  width: 620px;
+}
+
+.form-container .type .ty2 {
+  margin-top: 0.7rem;
+  
+}
+
+.form-container .type .ty2 #space{
+  margin-left: 9.8rem;
+}
+
+button {
+  width: 100%;
+  padding: 15px;
+  font-size: 1rem;
+  font-weight: 600;
+  background-color: var(--main);
+  border-radius: 10px;
+  border: none;
+  color: #fff;
+}
+
+button:hover {
+  color: var(--sec);
+  transition: 0.3s all ease-in-out;
+  background-color: rgba(155, 135, 245, 0.8);
+}
+
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+  max-height: 380px;
+  max-width: 350px;
+  border: 1px solid #e2e8f0;
+}
+
+.contact-info .P {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.contact-info .P i{
+  background-color: var(--third);
+  color: var(--main);
+  border-radius: 50%;
+  padding: 8px;
+  font-size: 1.3rem;
+}
+
+.contact-info .E i{
+  background-color: var(--third);
+  color: var(--main);
+  border-radius: 50%;
+  padding: 8px;
+  font-size: 1.3rem;
+}
+
+.contact-info .A i{
+  background-color: var(--third);
+  color: var(--main);
+  border-radius: 50%;
+  padding: 8px;
+  font-size: 1.3rem;
+}
+
+
+.contact-info .P .p{
+  display: flex;
+  flex-direction: column;
+}
+
+.contact-info .E {
+  display: flex;
+  margin-top: 1rem;
+  align-items: center;
+  gap: 1rem;
+}
+
+.contact-info .E p a{
+  text-decoration: none;
+}
+
+.contact-info .P p a{
+  text-decoration: none;
+}
+
+contact-info .E .e{
+  display: flex;
+  flex-direction: column;
+}
+
+.contact-info .A {
+  display: flex;
+  margin: 1rem 0rem;
+  align-items: center;
+  gap: 1rem;
+}
+
+contact-info .A .a{
+  display: flex;
+  flex-direction: column;
+}
+
+.contact-info p {
+  opacity: 0.8;
+}

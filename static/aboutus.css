@@ -1,0 +1,503 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  background-color: rgba(255, 255, 255);
+  color: #222;
+}
+
+:root {
+  --main: #9b87f5;
+  --sec: #1a1f2c;
+  --third: #f5f2ff;
+}
+
+header {
+  text-align: center;
+  padding: 6rem 0rem;
+  background-color: var(--third);
+}
+
+header p {
+  opacity: 0.8;
+  margin-top: 0.8rem;
+}
+
+.our-story {
+  display: flex;
+  justify-content: space-between;
+  padding: 50px 10%;
+  background-color: #fff;
+}
+
+.story-content {
+  width: 50%;
+}
+
+.story-content h2 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.story-content p {
+  margin-bottom: 15px;
+  color: #555;
+}
+
+.story-image {
+  width: 40%;
+  background-color: #f0f2fa;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+}
+
+.story-image h2 {
+  font-size: 3rem;
+  color: var(--main);
+  font-weight: 300;
+}
+
+.mission-vision {
+  display: flex;
+  justify-content: space-between;
+  padding: 50px 10%;
+  background-color: #f5f7fb;
+}
+
+.mission,
+.vision {
+  width: 45%;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.mission h3,
+.vision h3 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+.mission .icon,
+.vision .icon {
+  font-size: 2.5rem;
+  display: block;
+  margin-bottom: 15px;
+  color: var(--main);
+}
+
+.core-values {
+  text-align: center;
+  padding: 50px 10%;
+  background-color: #fff;
+}
+
+.core-values h2 {
+  font-size: 2rem;
+  margin-bottom: 30px;
+}
+
+.values-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.value {
+  background-color: #f5f7fb;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.value .icon {
+  font-size: 2.5rem;
+  margin-bottom: 15px;
+  display: block;
+  color: var(--main);
+}
+
+.value h4 {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+.value p {
+  color: #555;
+}
+
+.our-impact {
+  background-color: #2a2a2a;
+  color: #fff;
+  padding: 50px 10%;
+  text-align: center;
+}
+
+.our-impact h2 {
+  font-size: 2rem;
+  margin-bottom: 30px;
+}
+
+.impact-stats {
+  display: flex;
+  justify-content: space-around;
+}
+
+.stat h3 {
+  font-size: 2.5rem;
+  color: var(--main);
+  margin-bottom: 10px;
+}
+
+.stat p {
+  font-size: 1.1rem;
+}
+
+.accreditations {
+  text-align: center;
+  padding: 50px 10%;
+  background-color: #fff;
+}
+
+.accreditations h2 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.accreditations p {
+  margin-bottom: 30px;
+  color: #555;
+}
+
+.accreditation-logos {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+
+.logo {
+  background-color: #ffffff;
+
+  border-radius: 25px;
+
+  font-size: 1rem;
+  color: #333;
+}
+
+.cta {
+  text-align: center;
+  padding: 7rem 10%;
+  background-color: var(--third);
+}
+
+.cta h2 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.cta p {
+  margin-bottom: 30px;
+  color: #555;
+}
+
+.cta-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+#btn {
+  background-color: var(--main);
+  color: #fff;
+  font-size: 0.9rem;
+  padding: 15px 40px;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+#btn:hover {
+  background-color: rgba(155, 135, 245, 0.8);
+  color: #1a1f2c;
+  transition: 0.3s all ease-in-out;
+}
+
+.btn.secondary {
+  background-color: white;
+  border: 2px solid var(--main);
+  color: var(--main);
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btn.secondary:hover {
+  background-color: rgba(155, 135, 245, 0.2);
+  color: #1a1f2c;
+  transition: 0.3s all ease-in-out;
+}
+
+/* Navigation Bar */
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.1); /* Semi-transparent white */
+  padding: 18px 30px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px); /* Applies the blur effect */
+  -webkit-backdrop-filter: blur(10px); /* Safari support */
+  z-index: 999;
+  margin: 20px 30px;
+}
+
+.logo h1 span {
+  color: var(--main);
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+}
+
+.nav-links li {
+  margin: 0 15px;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #444;
+  font-size: 16px;
+  padding: 8px 15px;
+  border-radius: 5px;
+  transition: 0.3s ease;
+}
+
+.nav-links a:hover {
+  color: var(--main);
+}
+
+.btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.btn #login-btn {
+  background-color: var(--main);
+  padding: 7px 16px;
+  border-radius: 6px;
+  padding-left: 2rem;
+}
+
+.btn #logout-btn {
+  background-color: var(--main);
+  padding: 7px 16px;
+  border-radius: 6px;
+  padding-left: 2rem;
+}
+
+.btn #login {
+  position: absolute;
+  font-size: 1.1rem;
+  color: #ffffff;
+  right: 225px;
+}
+
+.btn #logout {
+  position: absolute;
+  font-size: 1.3rem;
+  color: #ffffff;
+  right: 115px;
+}
+
+.btn ul {
+  list-style-type: none;
+  display: flex;
+  margin: 0;
+  padding: 0;
+}
+
+.btn ul li {
+  margin: 0 8px; /* Adds spacing between Log In and Logout */
+}
+
+.btn ul li a {
+  text-decoration: none;
+  font-size: 1.1rem;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+/*Footer Section*/
+
+.foot2 {
+  width: 100%;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.7;
+}
+
+.foot1 .col4 .loca {
+  display: flex;
+}
+
+.foot1 .divide .col4 .loca p {
+  margin-left: 8px;
+}
+
+.foot1 .divide .col4 .call {
+  display: flex;
+}
+
+.foot1 .divide .col4 .call p {
+  margin-left: 8px;
+}
+
+.foot1 .divide .col4 .mail {
+  display: flex;
+}
+
+.foot1 .divide .col4 .mail p {
+  margin-left: 8px;
+}
+
+.foot1 .divide .col4 .time {
+  display: flex;
+}
+
+.foot1 .divide .col4 .time p {
+  margin-left: 8px;
+}
+
+.foot1 {
+  width: 100%;
+  padding-top: 40px;
+
+  padding-bottom: 20px;
+}
+
+.foot1 .divide {
+  padding: 0px 40px;
+  display: flex;
+  justify-content: space-evenly;
+  opacity: 1;
+}
+
+.foot1 .divide .col1 h3 {
+  font-size: 1.5rem;
+}
+
+.foot1 .divide .col1 h3 span {
+  color: var(--main);
+}
+
+.foot1 .divide .col1 p {
+  opacity: 0.8;
+}
+
+.foot1 .divide .col2 h4 {
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.foot1 .divide .col2 li {
+  list-style-type: none;
+  padding: 8px 0px;
+}
+
+.foot1 .divide .col2 li a {
+  text-decoration: none;
+  color: var(--sec);
+  opacity: 0.8;
+}
+
+.foot1 .divide .col2 li a:hover {
+  color: var(--main);
+  transition: 0.2s all ease-in-out;
+}
+
+.foot1 .divide .col3 h4 {
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.foot1 .divide .col3 li {
+  list-style-type: none;
+  padding: 8px 0px;
+}
+
+.foot1 .divide .col3 li:hover {
+  color: var(--main);
+  transition: 0.2s all ease-in-out;
+}
+
+.foot1 .divide .col4 h4 {
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.foot1 .divide .col4 .loca .icon3 {
+  color: var(--main);
+  font-size: 1.2rem;
+  padding-top: 13px;
+}
+
+.foot1 .divide .col4 .call .icon3 {
+  color: var(--main);
+  font-size: 1.2rem;
+  padding-top: 13px;
+}
+
+.foot1 .divide .col4 .mail .icon3 {
+  color: var(--main);
+  font-size: 1.2rem;
+  padding-top: 13px;
+}
+
+.foot1 .divide .col4 .time .icon3 {
+  color: var(--main);
+  font-size: 1.2rem;
+  padding-top: 13px;
+}
+
+.foot1 .divide .col4 .loca p {
+  font-size: 1rem;
+  padding-top: 15px;
+}
+
+.foot1 .divide .col4 .call p {
+  font-size: 1rem;
+  padding-top: 15px;
+}
+
+.foot1 .divide .col4 .mail p {
+  font-size: 1rem;
+  padding-top: 15px;
+}
+
+.foot1 .divide .col4 .time p {
+  font-size: 1rem;
+  padding-top: 15px;
+}
+
+footer hr {
+  width: 80%; /* Or 100% if it's inside container */
+  margin: 0rem 10rem auto; /* Center it */
+  border: none;
+  border-top: 1px solid #ccc;
+}

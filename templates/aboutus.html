@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🧑🏼‍⚕️LifeCare Clinic - About Us</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='aboutus.css') }}" />
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet" />
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+</head>
+
+<body>
+
+    <nav>
+        <div class="logo">
+            <h1>LifeCare <span>Clinic</span></h1>
+        </div>
+
+        <ul class="nav-links">
+            <li><a href="{{ url_for('home') }}">Home</a></li>
+            <li><a href="{{ url_for('about_us') }}">About</a></li>
+            <li><a href="{{ url_for('doctors') }}">Doctors</a></li>
+            <li><a href="{{ url_for('appointments') }}">Appointments</a></li>
+            <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
+        </ul>
+
+        <div class="btn">
+            <i id="login" class='bx bx-user bx-flashing'></i>
+            <ul>
+                <li><a href="{{ url_for('login') }}" id="login-btn">Log In</a></li>
+                <li><a href="{{ url_for('logout') }}" id="logout-btn">Logout</a></li>
+            </ul>
+            <i id="logout" class='bx bx-log-out bx-flashing'></i>
+        </div>
+    </nav>
+
+    <header>
+        <h1>About LifeCare Clinic</h1>
+        <p>
+            A modern healthcare facility committed to providing exceptional medical services with
+            <br>compassion and care.
+        </p>
+    </header>
+
+    <section class="our-story">
+        <div class="story-content">
+            <h2>Our Story</h2>
+            <p>
+                Founded in 2005, LifeCare Clinic began with a simple mission: to provide patient-centered healthcare that combines medical excellence with compassionate care. What started as a small practice has grown into a comprehensive healthcare facility serving thousands
+                of patients each year.
+            </p>
+            <p>
+                Our team of dedicated healthcare professionals works tirelessly to ensure that every patient receives personalized attention and the highest quality of medical care. We believe in treating not just the symptoms, but the whole person, taking into account
+                their physical, emotional, and social well-being.
+            </p>
+            <p>
+                Over the years, we have expanded our services and facilities to meet the growing needs of our community, but our commitment to our founding principles remains unchanged.
+            </p>
+        </div>
+
+        <div class="story-image">
+            <img src="{{ url_for('static', filename='images/png-healthcare-platform-services-architecture-building-vehicle_53876-880294.jpg') }}" width="600px" alt="Healthcare facility">
+        </div>
+    </section>
+
+    <section class="mission-vision">
+        <div class="mission">
+            <i class="fas fa-heart icon"></i>
+            <h3>Our Mission</h3>
+            <p>
+                To provide accessible, high-quality healthcare services with compassion and integrity. We strive to improve the health and well-being of the communities we serve through personalized care, education, and innovation.
+            </p>
+        </div>
+
+        <div class="vision">
+            <i class="fas fa-star icon"></i>
+            <h3>Our Vision</h3>
+            <p>
+                To be recognized as the leading healthcare provider in our region, known for excellence in medical care, patient satisfaction, and community health. We aim to continuously evolve and adopt innovative approaches to meet the changing healthcare needs of our society.
+            </p>
+        </div>
+    </section>
+
+    <section class="core-values">
+        <h2>Our Core Values</h2>
+
+        <div class="values-grid">
+            <div class="value">
+                <i class="fas fa-magnifying-glass icon"></i>
+                <h4>Integrity</h4>
+                <p>
+                    We uphold the highest standards of honesty, transparency, and ethical conduct in all our interactions.
+                </p>
+            </div>
+
+            <div class="value">
+                <i class="fas fa-heart icon"></i>
+                <h4>Compassion</h4>
+                <p>
+                    We treat every patient with kindness, empathy, and respect, recognizing their unique needs and concerns.
+                </p>
+            </div>
+
+            <div class="value">
+                <i class="fas fa-trophy icon"></i>
+                <h4>Excellence</h4>
+                <p>
+                    We strive for excellence in everything we do, continuously improving our services and skills.
+                </p>
+            </div>
+
+            <div class="value">
+                <i class="fas fa-users icon"></i>
+                <h4>Teamwork</h4>
+                <p>
+                    We work collaboratively across disciplines to provide comprehensive, coordinated care.
+                </p>
+            </div>
+
+            <div class="value">
+                <i class="fas fa-sync-alt icon"></i>
+                <h4>Accountability</h4>
+                <p>
+                    We are responsible for our actions and decisions, always putting patient safety first.
+                </p>
+            </div>
+
+            <div class="value">
+                <i class="fas fa-lightbulb icon"></i>
+                <h4>Innovation</h4>
+                <p>
+                    We embrace new ideas, technologies, and approaches to improve healthcare delivery.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="our-impact">
+        <h2>Our Impact</h2>
+
+        <div class="impact-stats">
+            <div class="stat">
+                <h3>15+</h3>
+                <p>Years of Service</p>
+            </div>
+            <div class="stat">
+                <h3>30+</h3>
+                <p>Experienced Doctors</p>
+            </div>
+            <div class="stat">
+                <h3>50K+</h3>
+                <p>Patients Treated</p>
+            </div>
+            <div class="stat">
+                <h3>15+</h3>
+                <p>Specialists</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="accreditations">
+        <h2>Our Accreditations</h2>
+        <p>
+            We are proud to be recognized by these prestigious healthcare organizations for our commitment to excellence and quality care.
+        </p>
+
+        <div class="accreditation-logos">
+            <div class="logo">Joint Commission Accredited</div>
+            <div class="logo">American Medical Association</div>
+            <div class="logo">Healthcare Excellence Award 2023</div>
+            <div class="logo">Patient Safety Excellence</div>
+        </div>
+    </section>
+
+    <section class="cta">
+        <h2>Experience the LifeCare Clinic Difference</h2>
+        <p>
+            We’re dedicated to providing you with the best healthcare experience. Schedule an appointment today to
+            <br>see how we can help you on your path to better health.
+        </p>
+
+        <div class="cta-buttons">
+            <button style="font-weight: 600; padding:10px 20px;" onclick="window.location.href='{{ url_for('appointments') }}'" id="btn">
+                Book an Appointment
+            </button>
+
+            <button class="btn secondary" style="font-weight: 600; padding:10px 20px;" onclick="window.location.href='{{ url_for('contact') }}'">
+                Contact Us
+            </button>
+        </div>
+    </section>
+
+    <footer>
+        <div class="foot1">
+            <div class="divide">
+                <div class="col1">
+                    <h3><span>LifeCare</span> Clinic</h3>
+                    <p>
+                        Providing quality healthcare services <br>with a personal touch since 2005.
+                    </p>
+                </div>
+
+                <div class="col2">
+                    <h4>Quick Links</h4>
+                    <li><a href="{{ url_for('home') }}">Home</a></li>
+                    <li><a href="{{ url_for('about_us') }}">About Us</a></li>
+                    <li><a href="{{ url_for('doctors') }}">Our Doctors</a></li>
+                    <li><a href="{{ url_for('appointments') }}">Book Appointment</a></li>
+                    <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
+                </div>
+
+                <div class="col3">
+                    <h4>Services</h4>
+                    <li>General Checkup</li>
+                    <li>Specialist Consultation</li>
+                    <li>Pediatric Care</li>
+                    <li>Emergency Services</li>
+                    <li>Laboratory Tests</li>
+                </div>
+
+                <div class="col4">
+                    <h4>Contact Us</h4>
+                    <div class="loca">
+                        <div class="icon3"><i class="ri-map-pin-line"></i></div>
+                        <p>123 Medical Center Dr, Healthcare City</p>
+                    </div>
+                    <div class="call">
+                        <div class="icon3"><i class="ri-phone-line"></i></div>
+                        <p>+1 (555) 123-4567</p>
+                    </div>
+                    <div class="mail">
+                        <div class="icon3"><i class="ri-mail-line"></i></div>
+                        <p>info@LifeCareclinic.com</p>
+                    </div>
+                    <div class="time">
+                        <div class="icon3"><i class="ri-time-line"></i></div>
+                        <p>Mon-Fri: 8am-7pm, Sat: 9am-5pm</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="foot2">
+            <p>© 2026 LifeCare Clinic.| All rights reserved.| Shubhzzz..</p>
+        </div>
+    </footer>
+
+</body>
+
+</html>

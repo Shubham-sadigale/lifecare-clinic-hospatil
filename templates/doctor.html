@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LifeCare Clinic - Doctors</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='doctor.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet" />
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+</head>
+
+<body>
+
+<header>
+    <nav>
+        <div class="logo">
+            <h1>LifeCare<span>Clinic</span></h1>
+        </div>
+
+        <ul class="nav-links">
+            <li><a href="{{ url_for('home') }}">Home</a></li>
+            <li><a href="{{ url_for('about_us') }}">About</a></li>
+            <li><a href="{{ url_for('doctors') }}">Doctors</a></li>
+            <li><a href="{{ url_for('appointments') }}">Appointments</a></li>
+            <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
+        </ul>
+
+        <div class="btn">
+            <i id="login" class='bx bx-user bx-flashing'></i>
+            <ul>
+                <li><a href="{{ url_for('login') }}" id="login-btn">Log In</a></li>
+                <li><a href="{{ url_for('logout') }}" id="logout-btn">Logout</a></li>
+            </ul>
+            <i id="logout" class='bx bx-log-out bx-flashing'></i>
+        </div>
+    </nav>
+</header>
+
+<div class="content">
+    <div class="text">
+        <h3 style="font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">Our Doctors</h3>
+        <p>Meet our team of experienced healthcare professionals dedicated to providing you with the best medical care.</p>
+    </div>
+</div>
+
+<div class="contain">
+    <i class="ri-search-line"></i>
+    <input type="text" class="search-box" placeholder="Search by name or speciality...">
+
+    <select id="specialty-filter">
+        <option value="All">All Specialties</option>
+        <option value="Cardiology">Cardiology</option>
+        <option value="Pediatrics">Pediatrics</option>
+        <option value="Nephrology">Nephrology</option>
+        <option value="Orthopedics">Orthopedics</option>
+        <option value="Dermatology">Dermatology</option>
+        <option value="Gynecology">Gynecology</option>
+        <option value="General Medicine">General Medicine</option>
+        <option value="Neurology">Neurology</option>
+        <option value="Radiology">Radiology</option>
+    </select>
+</div>
+
+<div class="search-container">
+    <div class="container">
+
+        <div class="box" data-name="Dr. Neha Mehta" data-specialty="Gynecology">
+            <div id="photo">
+                <img class="ph2" src="{{ url_for('static', filename='images/neha mehta.png') }}" alt="Dr. Neha Mehta">
+            </div>
+            <div class="info">
+                <h3>Dr. Neha Mehta</h3>
+                <h5>👩‍⚕ Gynecology</h5>
+                <p>Senior Consultant, Obstetrics & Gynecology, Apollo Hospitals.</p>
+                <div class="last">
+                    <p>Experience: 12 years</p>
+                    <button>View Profile</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="box" data-name="Dr. Vishal Saxena" data-specialty="Nephrology">
+            <div id="photo">
+                <img class="ph2" src="{{ url_for('static', filename='images/Vishal_saxnena.jpg') }}" alt="Dr. Vishal Saxena">
+            </div>
+            <div class="info">
+                <h3>Dr. Vishal Saxena</h3>
+                <h5>🩺 Nephrology</h5>
+                <p>Senior Consultant Nephrologist, Indraprastha Apollo Hospital.</p>
+                <div class="last">
+                    <p>Experience: 18 years</p>
+                    <button>View Profile</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="box" data-name="Dr. Mukul Verma" data-specialty="Neurology">
+            <div id="photo">
+                <img class="ph2" src="{{ url_for('static', filename='images/dr-mukul-varma-neurology.png') }}" alt="Dr. Mukul Verma">
+            </div>
+            <div class="info">
+                <h3>Dr. Mukul Verma</h3>
+                <h5>🧠 Neurology</h5>
+                <p>Senior Consultant Neurologist at Max Healthcare. He specializes in movement disorders.</p>
+                <div class="last">
+                    <p>Experience: 35 years</p>
+                    <button>View Profile</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="box" data-name="Dr. Ambuj Roy" data-specialty="Cardiology">
+            <div id="photo">
+                <img class="ph2" src="{{ url_for('static', filename='images/dr roy cardiology.png') }}" alt="Dr. Ambuj Roy">
+            </div>
+            <div class="info">
+                <h3>Dr. Ambuj Roy</h3>
+                <h5>❤️ Cardiology</h5>
+                <p>Professor of Cardiology. He is known for his advanced treatment methods.</p>
+                <div class="last">
+                    <p>Experience: 21 years</p>
+                    <button>View Profile</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="box" data-name="Dr. Anju Singh" data-specialty="Pediatrics">
+            <div id="photo">
+                <img class="ph2" src="{{ url_for('static', filename='images/dr.anju sigh.jpg') }}" alt="Dr. Anju Singh">
+            </div>
+            <div class="info">
+                <h3>Dr. Anju Singh</h3>
+                <h5>🧒 Pediatrics</h5>
+                <p>Pediatric Rheumatologist providing comprehensive care for children.</p>
+                <div class="last">
+                    <p>Experience: 9 years</p>
+                    <button>View Profile</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="box" data-name="Dr. Narender Kumar Magu" data-specialty="Orthopedics">
+            <div id="photo">
+                <img class="ph2" src="{{ url_for('static', filename='images/narendra kumar magu.jpg') }}" alt="Dr. Narender Kumar Magu">
+            </div>
+            <div class="info">
+                <h3>Dr. Narender Kumar Magu</h3>
+                <h5>🦴 Orthopedics</h5>
+                <p>Senior Consultant Orthopedic Surgeon treating bone and joint conditions.</p>
+                <div class="last">
+                    <p>Experience: 29 years</p>
+                    <button>View Profile</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="box" data-name="Dr. Rinky Kapoor" data-specialty="Dermatology">
+            <div id="photo">
+                <img class="ph2" src="{{ url_for('static', filename='images/_Rinky_Kapoor orthopedic.jpg') }}" alt="Dr. Rinky Kapoor">
+            </div>
+            <div class="info">
+                <h3>Dr. Rinky Kapoor</h3>
+                <h5>🧴 Dermatology</h5>
+                <p>Consultant Dermatologist and cosmetologist specializing in skin and hair.</p>
+                <div class="last">
+                    <p>Experience: 19 years</p>
+                    <button>View Profile</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="box" data-name="Dr. Monica Bambroo" data-specialty="General Medicine">
+            <div id="photo">
+                <img class="ph2" src="{{ url_for('static', filename='images/monica bambroo.jpg') }}" alt="Dr. Monica Bambroo">
+            </div>
+            <div class="info">
+                <h3>Dr. Monica Bambroo</h3>
+                <h5>🩺 General Medicine</h5>
+                <p>Senior Specialist in General Medicine performing advanced medical procedures.</p>
+                <div class="last">
+                    <p>Experience: 18 years</p>
+                    <button>View Profile</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="box" data-name="Dr. Raghunandan Prasad" data-specialty="Radiology">
+            <div id="photo">
+                <img class="ph2" src="{{ url_for('static', filename='images/raghunandan.jpg') }}" alt="Dr. Raghunandan Prasad">
+            </div>
+            <div class="info">
+                <h3>Dr. Raghunandan Prasad</h3>
+                <h5>🔬 Radiology</h5>
+                <p>Senior Consultant Interventional Radiologist and Head of Department.</p>
+                <div class="last">
+                    <p>Experience: 17 years</p>
+                    <button>View Profile</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<hr>
+
+<footer>
+    <div class="foot1">
+        <div class="divide">
+            <div class="col1">
+                <h3><span>LifeCare</span> Clinic</h3>
+                <p>
+                    Providing quality healthcare services <br>with a personal touch since 2005.
+                </p>
+            </div>
+
+            <div class="col2">
+                <h4>Quick Links</h4>
+                <li><a href="{{ url_for('home') }}">Home</a></li>
+                <li><a href="{{ url_for('about_us') }}">About Us</a></li>
+                <li><a href="{{ url_for('doctors') }}">Our Doctors</a></li>
+                <li><a href="{{ url_for('appointments') }}">Book Appointment</a></li>
+                <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
+            </div>
+
+            <div class="col3">
+                <h4>Services</h4>
+                <li>General Checkup</li>
+                <li>Specialist Consultation</li>
+                <li>Pediatric Care</li>
+                <li>Emergency Services</li>
+                <li>Laboratory Tests</li>
+            </div>
+
+            <div class="col4">
+                <h4>Contact Us</h4>
+                <div class="loca">
+                    <div class="icon3"><i class="ri-map-pin-line"></i></div>
+                    <p>123 Medical Center Dr, Healthcare City</p>
+                </div>
+                <div class="call">
+                    <div class="icon3"><i class="ri-phone-line"></i></div>
+                    <p>+1 (555) 123-4567</p>
+                </div>
+                <div class="mail">
+                    <div class="icon3"><i class="ri-mail-line"></i></div>
+                    <p>info@Lifecareclinic.com</p>
+                </div>
+                <div class="time">
+                    <div class="icon3"><i class="ri-time-line"></i></div>
+                    <p>Mon-Fri: 8am-7pm, Sat: 9am-5pm</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="foot2">
+        <p>© 2026 LifeCare Clinic| All rights reserved | Shubhzzz..</p>
+    </div>
+</footer>
+
+<script>
+    const searchBox = document.querySelector(".search-box");
+    const specialtySelect = document.getElementById("specialty-filter");
+    const doctorCards = document.querySelectorAll(".box");
+
+    function filterDoctors() {
+        const searchTerm = searchBox.value.toLowerCase();
+        const selectedSpecialty = specialtySelect.value;
+
+        doctorCards.forEach(card => {
+            const name = card.dataset.name.toLowerCase();
+            const specialty = card.dataset.specialty.toLowerCase();
+
+            const matchesSearch = name.includes(searchTerm) || specialty.includes(searchTerm);
+            const matchesDropdown = selectedSpecialty === "All" || specialty === selectedSpecialty.toLowerCase();
+
+            if ((selectedSpecialty === "All" && searchTerm === "") || (matchesSearch && matchesDropdown)) {
+                card.style.display = "block";
+            } else {
+                card.style.display = "none";
+            }
+        });
+    }
+
+    searchBox.addEventListener("input", filterDoctors);
+    specialtySelect.addEventListener("change", filterDoctors);
+</script>
+
+</body>
+</html>

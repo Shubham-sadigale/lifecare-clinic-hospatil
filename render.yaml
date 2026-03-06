@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: shubham-hospital-app
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    envVars:
+      - key: FLASK_ENV
+        value: production
+      - key: PYTHON_VERSION
+        value: 3.10
+      - key: SECRET_KEY
+        sync: false
+      - key: WEBHOOK_SECRET
+        sync: false
+      - key: DB_NAME
+        value: shubham_hospital.db
+      - key: DEFAULT_ADMIN_EMAIL
+        value: sadigaleshubham8@gmail.com
+      - key: DEFAULT_ADMIN_PASSWORD
+        sync: false
+      - key: SENDER_EMAIL
+        value: sadigaleshubham8@gmail.com
+      - key: SENDER_PASSWORD
+        sync: false

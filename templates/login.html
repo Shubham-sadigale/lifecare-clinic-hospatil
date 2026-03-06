@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Patient Login - LifeCare Clinic</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='patient.css') }}" />
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet" />
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+
+    <style>
+        :root {
+            --main: #9b87f5;
+            --sec: #1a1f2c;
+            --third: #f5f2ff;
+        }
+
+        .popup {
+            display: none;
+            position: absolute;
+            top: 30px;
+            right: 640px;
+            padding: 15px 25px;
+            border-radius: 5px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            z-index: 9999;
+            font-weight: bold;
+            animation: fadein 0.5s;
+        }
+
+        .popup.account,
+        .popup.logout {
+            background-color: white;
+            color: black;
+        }
+
+        .popup.error {
+            background-color: #f9a3ab;
+            color: black;
+        }
+
+        @keyframes fadein {
+            from {
+                opacity: 0;
+                top: 0;
+            }
+            to {
+                opacity: 1;
+                top: 30px;
+            }
+        }
+
+        .admin {
+            position: absolute;
+            top: 40px;
+            right: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .admin ul {
+            list-style-type: none;
+        }
+
+        .admin ul li a {
+            text-decoration: none;
+            color: white;
+            background-color: var(--main);
+            padding: 13px 20px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            z-index: 9;
+            padding-left: 2.3rem;
+        }
+
+        .admin ul li a:hover {
+            background-color: rgba(155, 135, 245, 0.8);
+            color: var(--sec);
+            transition: 0.2s all ease-in;
+        }
+
+        .admin i {
+            z-index: 100;
+            position: absolute;
+            color: rgb(255, 255, 255);
+            right: 136px;
+            font-size: 1.5rem;
+        }
+    </style>
+</head>
+
+<body>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="popup {{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+            <script>
+                const popups = document.querySelectorAll('.popup');
+                popups.forEach(popup => {
+                    popup.style.display = "block";
+                    setTimeout(() => {
+                        popup.style.display = "none";
+                    }, 3000);
+                });
+            </script>
+        {% endif %}
+    {% endwith %}
+
+    <div class="admin">
+        <i class="ri-admin-fill"></i>
+        <ul>
+            <li><a href="{{ url_for('admin_login') }}" id="admin-btn">Admin Log In</a></li>
+        </ul>
+    </div>
+
+    <div class="container">
+        <h1>
+            <span class="LifeCare">LifeCare</span><span class="clinic">Clinic</span>
+        </h1>
+
+        <div class="form-card">
+            <form action="{{ url_for('login') }}" method="POST">
+                <h2>Patient Login</h2>
+                <p>Enter your credentials to access your patient portal</p>
+
+                <label>Email</label>
+                <input
+                    type="email"
+                    name="email"
+                    placeholder="your.email@example.com"
+                    required
+                />
+
+                <label>Password</label>
+                <div class="password-row">
+                    <input type="password" name="password" required />
+                </div>
+
+                <button type="submit" class="btn purple">Sign In</button>
+
+                <p class="register-link">
+                    Don't have an account?
+                    <a href="{{ url_for('signup') }}">Register here</a>
+                </p>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logged Out - LifeCare Clinic</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='logout.css') }}">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+</head>
+<body>
+
+    <header>
+        <nav>
+            <div class="logo">
+                <h1>LifeCare<span>Clinic</span></h1>
+            </div>
+
+            <ul class="nav-links">
+                <li><a href="{{ url_for('home') }}">Return to Home</a></li>
+            </ul>
+
+            <div class="btn">
+                <i class='bx bx-user bx-flashing'></i>
+                <ul>
+                    <li><a href="{{ url_for('login') }}" id="login-btn">Log In</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+</body>
+</html>

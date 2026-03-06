@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Patient Register - LifeCare Clinic</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='patient-register.css') }}">
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>
+<span class="LifeCare">LifeCare</span>
+<span class="clinic">Clinic</span>
+</h1>
+
+<div class="form-card">
+
+<form action="{{ url_for('signup') }}" method="POST">
+
+<h2>Create Patient Account</h2>
+
+<p>Register to manage your appointments and reports</p>
+
+<label>Name</label>
+<input type="text" name="name" placeholder="Shubham Sadigale" required>
+
+<label>Email</label>
+<input type="email" name="email" placeholder="sadigaleshubham8@gmail.com" required>
+
+<label>Mobile Number</label>
+<input type="text" name="number" placeholder="8010556092" required>
+
+<label>Password</label>
+<input type="password" name="password" required>
+
+<button type="submit" class="btn purple">Register</button>
+
+<p class="login-link">
+Already have an account?
+<a href="{{ url_for('login') }}">Login</a>
+</p>
+
+</form>
+
+</div>
+
+</div>
+
+</body>
+</html>

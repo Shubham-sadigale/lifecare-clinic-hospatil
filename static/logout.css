@@ -1,0 +1,97 @@
+@import url("https://fonts.googleapis.com/css2?family=Questrial&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  background-color: rgba(255, 255, 255);
+  color: #222;
+}
+
+:root {
+  --main: #9b87f5;
+  --sec: #1a1f2c;
+  --third: #f5f2ff;
+}
+
+/* Navigation Bar */
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.1); /* Semi-transparent white */
+  padding: 18px 30px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px); /* Applies the blur effect */
+  -webkit-backdrop-filter: blur(10px); /* Safari support */
+  z-index: 999;
+  margin: 20px 30px;
+}
+
+.logo h1 span {
+  color: var(--main);
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+}
+
+.nav-links li {
+  margin: 0 15px;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #444;
+  font-size: 16px;
+  padding: 8px 15px;
+  border-radius: 5px;
+  transition: 0.3s ease;
+}
+
+.nav-links a:hover {
+  color: var(--main);
+}
+
+.btn{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background-color: var(--main);
+    padding: 8px 10px;
+    border-radius: 10px;
+}
+
+.btn:hover{
+    background-color: #ab9af7ef;
+    color: var(--sec);
+    transition: 0.2s all ease-in;
+}
+
+.btn i{
+    font-size: 1.1rem;
+    color: #fff;
+}
+
+
+
+.btn ul{
+    list-style-type: none;
+}
+
+.btn ul li a{
+    text-decoration: none;
+    font-size: 1.1rem;
+    color: #fff;
+    cursor: pointer;
+}

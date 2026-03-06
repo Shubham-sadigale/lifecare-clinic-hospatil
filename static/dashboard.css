@@ -1,0 +1,156 @@
+@import url("https://fonts.googleapis.com/css2?family=Questrial&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  
+  color: #222;
+}
+
+body{
+    background-color: var(--third);
+    z-index: -100;
+}
+
+:root {
+  --main: #9b87f5;
+  --sec: #1a1f2c;
+  --third: #f5f2ff;
+}
+
+/* Navigation Bar */
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: white;
+  /*background: rgba(255, 255, 255, 0.1);*/ /* Semi-transparent white */  
+  padding: 18px 30px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px); /* Applies the blur effect */
+  -webkit-backdrop-filter: blur(10px); /* Safari support */
+  z-index: 999;
+  margin: 20px 30px;
+}
+
+.logo h1 span {
+  color: var(--main);
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+}
+
+.nav-links li {
+  margin: 0 15px;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #444;
+  font-size: 16px;
+  padding: 8px 15px;
+  border-radius: 2px;
+  transition: 0.3s ease;
+}
+
+.nav-links a:hover {
+  color: var(--main);
+}
+
+.btn i{
+    font-size: 1.4rem;
+    color: #ffffff;
+    position: absolute;
+    top: 25px;
+    right: 115px;
+}
+
+.btn ul{
+    list-style-type: none;
+}
+
+.btn ul li a{
+    text-decoration: none;
+    font-size: 1.2rem;
+    color: #ffffff;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+
+
+.btn ul li .logout-btn:hover{
+    background-color: rgba(155, 135, 245, 0.8);
+    color: var(--sec);
+    transition: 0.3s all ease-in-out;
+}
+
+.btn ul li .logout-btn{
+    background-color: var(--main);
+    padding: 10px 20px;
+    border-radius: 5px;
+    padding-left: 2rem;
+}
+
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    border: 1px solid #ddd;
+    border-radius: 2%;
+  }
+
+  th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+  }
+
+  th {
+    background-color: var(--main);
+    color: white;
+    
+  }
+
+  tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+
+  h2 {
+    margin-top: 20px;
+  }
+
+  .container {
+    width: 90%;
+    margin: auto;
+    background-color: #ffffff;
+    border-radius: 5px;
+    padding: 20px;
+  }
+
+  .back-btn {
+    margin-top: 20px;
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: var(--main);
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+  }
+
+  .back-btn:hover {
+    background-color: var(--main);
+  }

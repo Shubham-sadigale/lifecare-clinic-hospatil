@@ -1,0 +1,23 @@
+pip install virtualenv
+
+virtualenv env
+
+.\env\Scripts\activate.ps1
+
+pip install flask
+pip freeze > requirements.txt
+pip install gunicorn
+
+pip install render_template
+
+deactivate
+
+python .\app.py
+
+pip install flask_sqlalchemy
+
+python
+
+from app import db
+
+db.create_all()

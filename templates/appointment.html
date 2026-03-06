@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🧑🏼‍⚕️LifeCare Clinic - Appointments</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='appointment.css') }}">
+
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet" />
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+</head>
+
+<body>
+
+<header>
+    <nav>
+        <div class="logo">
+            <h1>LifeCare <span>Clinic</span></h1>
+        </div>
+
+        <ul class="nav-links">
+            <li><a href="{{ url_for('home') }}">Home</a></li>
+            <li><a href="{{ url_for('about_us') }}">About</a></li>
+            <li><a href="{{ url_for('doctors') }}">Doctors</a></li>
+            <li><a href="{{ url_for('appointments') }}">Appointments</a></li>
+            <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
+        </ul>
+
+        <div class="btn">
+            <i id="login" class='bx bx-user bx-flashing'></i>
+            <ul>
+                <li><a href="{{ url_for('login') }}" id="login-btn">Log In</a></li>
+                <li><a href="{{ url_for('logout') }}" id="logout-btn">Logout</a></li>
+            </ul>
+            <i id="logout" class='bx bx-log-out bx-flashing'></i>
+        </div>
+    </nav>
+</header>
+
+
+<div class="t1">
+    <h1>Book an Appointment</h1>
+    <p>
+        Schedule your visit with our healthcare professionals. Please fill out the form below and we'll confirm your appointment.
+    </p>
+</div>
+
+
+<section>
+
+<div class="container">
+
+<div class="contact-info">
+<h2>Contact Information</h2>
+
+<p>For help or questions</p>
+
+<div class="P">
+<i class="ri-phone-line"></i>
+<p class="p"><strong>Phone:</strong> <a href="tel:8010556092">+91 8010556092</a></p>
+</div>
+
+<div class="E">
+<i class="ri-mail-line"></i>
+<p class="e"><strong>Email:</strong> <a href="mailto:appointments@LifeCareclinic.com">appointments@Lifecareclinic.com</a></p>
+</div>
+
+<div class="A">
+<i class="ri-map-pin-line"></i>
+<p class="a"><strong>Address:</strong> <br>123 Medical Center Dr,<br>Healthcare City</p>
+</div>
+
+<p class="availability">
+Our staff is available Monday-Friday from 8am–7pm and Saturday from 9am–5pm.
+</p>
+
+</div>
+
+
+<div class="form-container">
+
+<h2>Appointment Request Form</h2>
+
+<p>Fill out the information below to request an appointment</p>
+
+
+<form action="{{ url_for('appointments') }}" method="POST">
+
+<div class="first-row">
+
+<div class="firstname">
+<label>First Name</label>
+<input type="text" name="firstname" required>
+</div>
+
+<div class="lastname">
+<label>Last Name</label>
+<input type="text" name="lastname" required>
+</div>
+
+</div>
+
+
+<div class="sec-row">
+
+<div class="email">
+<label>Email</label>
+<input type="email" name="email" required>
+</div>
+
+<div class="number">
+<label>Phone Number</label>
+<input type="tel" name="number" required>
+</div>
+
+</div>
+
+
+<div class="doctor">
+
+<label>Select a Doctor</label>
+
+<select name="doctor" required>
+
+<option value="">Select a doctor</option>
+
+<option>Dr. Monica Bambroo (General Physician)</option>
+
+<option>Dr. Ambuj Roy (Cardiologist)</option>
+
+<option>Dr. Anju Singh (Pediatrician)</option>
+
+<option>Dr. Narender Kumar Magu (Orthopedic Surgeon)</option>
+
+<option>Dr. Rinky Kapoor (Dermatologist)</option>
+
+<option>Dr. Mukul Verma (Neurologist)</option>
+
+<option>Dr. Neha Mehta (Gynecologist)</option>
+
+<option>Dr. Raghunandan Prasad (Radiologist)</option>
+
+<option>Dr. Vishal Saxena (Nephrologist)</option>
+
+</select>
+
+</div>
+
+
+<div class="date">
+<label>Appointment Date</label>
+<input type="date" name="date" required>
+</div>
+
+
+<div class="time">
+
+<label>Preferred Time</label>
+
+<select name="time" required>
+
+<option value="">Select a time</option>
+
+<option>9:00 AM</option>
+<option>11:00 AM</option>
+<option>2:00 PM</option>
+<option>4:00 PM</option>
+<option>7:00 PM</option>
+
+</select>
+
+</div>
+
+
+<div class="type">
+
+<label>Appointment Type</label>
+
+<div class="ty2">
+
+<input type="radio" name="type" value="New Patient" checked> New Patient
+
+<input type="radio" name="type" value="Follow-up"> Follow-up
+
+<input type="radio" name="type" value="Urgent Care"> Urgent Care
+
+</div>
+
+</div>
+
+
+<div class="notes">
+
+<label>Additional Notes</label>
+
+<textarea name="notes" placeholder="Additional Notes"></textarea>
+
+</div>
+
+
+<div class="btna">
+<button type="submit">Request Appointment</button>
+</div>
+
+
+</form>
+
+</div>
+
+</div>
+
+</section>
+
+
+<hr>
+
+
+<footer>
+
+<div class="foot1">
+
+<div class="divide">
+
+<div class="col1">
+
+<h3><span>LifeCare</span> Clinic</h3>
+
+<p>
+Providing quality healthcare services with a personal touch since 2005.
+</p>
+
+</div>
+
+
+<div class="col2">
+
+<h4>Quick Links</h4>
+
+<li><a href="{{ url_for('home') }}">Home</a></li>
+<li><a href="{{ url_for('about_us') }}">About Us</a></li>
+<li><a href="{{ url_for('doctors') }}">Our Doctors</a></li>
+<li><a href="{{ url_for('appointments') }}">Book Appointment</a></li>
+<li><a href="{{ url_for('contact') }}">Contact Us</a></li>
+
+</div>
+
+
+<div class="col3">
+
+<h4>Services</h4>
+
+<li>General Checkup</li>
+<li>Specialist Consultation</li>
+<li>Pediatric Care</li>
+<li>Emergency Services</li>
+<li>Laboratory Tests</li>
+
+</div>
+
+
+<div class="col4">
+
+<h4>Contact Us</h4>
+
+<p>123 Medical Center Dr, Healthcare City</p>
+
+<p>+1 (555) 123-4567</p>
+
+<p>info@LifeCareclinic.com</p>
+
+<p>Mon-Fri: 8am-7pm | Sat: 9am-5pm</p>
+
+</div>
+
+</div>
+
+</div>
+
+
+<hr>
+
+
+<div class="foot2">
+
+<p>© 2026 LifeCare Clinic.| All rights reserved.| Shubhzzz..</p>
+
+</div>
+
+</footer>
+
+</body>
+
+</html>

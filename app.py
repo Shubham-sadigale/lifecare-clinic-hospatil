@@ -1,29 +1,109 @@
 import os
+import re
 import threading
 import sqlite3
 import smtplib
 from email.mime.text import MIMEText
+from datetime import datetime
 
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
+# =========================
+# App Config
+# =========================
 app = Flask(__name__)
-app.secret_key = os.environ.get("SECRET_KEY", "shubham_secret_2026_123")
+app.secret_key = os.environ.get("SECRET_KEY", "change-this-in-production-very-strong-secret-key")
 
-WEBHOOK_SECRET = os.environ.get("WEBHOOK_SECRET", "shubham_webhook_2026_123")
-DB_NAME = os.environ.get("DB_NAME", "shubham_hospital2.db")
+DB_NAME = os.environ.get("DB_NAME", "shubham_hospital3.db")
 
 DEFAULT_ADMIN_EMAIL = os.environ.get("DEFAULT_ADMIN_EMAIL", "sadigaleshubham8@gmail.com")
-DEFAULT_ADMIN_PASSWORD = os.environ.get("DEFAULT_ADMIN_PASSWORD", "admin123")
+DEFAULT_ADMIN_PASSWORD = os.environ.get("DEFAULT_ADMIN_PASSWORD", "ChangeAdminPassword123!")
+
+ALLOWED_STATUSES = {"Pending", "Approved", "Cancelled"}
 
 
+# =========================
+# Helpers
+# =========================
 def get_db_connection():
     conn = sqlite3.connect(DB_NAME, timeout=10)
     conn.row_factory = sqlite3.Row
     return conn
 
 
+def is_valid_email(email):
+    if not email:
+        return False
+    pattern = r"^[^@\s]+@[^@\s]+\.[^@\s]+$"
+    return re.match(pattern, email) is not None
+
+
+def is_valid_phone(number):
+    if not number:
+        return False
+    cleaned = re.sub(r"[^\d]", "", number)
+    return 10 <= len(cleaned) <= 15
+
+
+def is_strong_password(password):
+    return len(password) >= 8
+
+
+def is_valid_date(date_text):
+    try:
+        datetime.strptime(date_text, "%Y-%m-%d")
+        return True
+    except ValueError:
+        return False
+
+
+def is_valid_time(time_text):
+    try:
+        datetime.strptime(time_text, "%H:%M")
+        return True
+    except ValueError:
+        return False
+
+
+def safe_strip(value):
+    return (value or "").strip()
+
+
+def send_email(to_email, subject, body):
+    try:
+        sender_email = os.environ.get("SENDER_EMAIL")
+        sender_password = os.environ.get("SENDER_PASSWORD")
+
+        if not sender_email or not sender_password:
+            print("❌ Email credentials missing.")
+            return
+
+        msg = MIMEText(body)
+        msg["Subject"] = subject
+        msg["From"] = sender_email
+        msg["To"] = to_email
+
+        with smtplib.SMTP("smtp.gmail.com", 587, timeout=20) as server:
+            server.starttls()
+            server.login(sender_email, sender_password)
+            server.send_message(msg)
+
+        print("✅ Email sent to", to_email)
+
+    except Exception as e:
+        print("❌ Email error:", e)
+
+
+def send_email_async(to_email, subject, body):
+    thread = threading.Thread(target=send_email, args=(to_email, subject, body), daemon=True)
+    thread.start()
+
+
+# =========================
+# Database Init
+# =========================
 def init_db():
     with sqlite3.connect(DB_NAME, timeout=10) as conn:
         cursor = conn.cursor()
@@ -33,7 +113,7 @@ def init_db():
             CREATE TABLE IF NOT EXISTS users (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 name TEXT NOT NULL,
-                email TEXT NOT NULL,
+                email TEXT UNIQUE NOT NULL,
                 number TEXT NOT NULL,
                 password TEXT NOT NULL
             )
@@ -45,7 +125,7 @@ def init_db():
                 name TEXT NOT NULL,
                 email TEXT NOT NULL,
                 number TEXT NOT NULL,
-                message TEXT
+                message TEXT NOT NULL
             )
         """)
 
@@ -61,28 +141,28 @@ def init_db():
                 time TEXT NOT NULL,
                 appointment_type TEXT NOT NULL,
                 notes TEXT,
-                status TEXT DEFAULT 'Pending'
+                status TEXT NOT NULL DEFAULT 'Pending'
             )
         """)
 
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS admins (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                fullname TEXT,
+                fullname TEXT NOT NULL,
                 email TEXT UNIQUE NOT NULL,
                 password TEXT NOT NULL
             )
         """)
 
-        cursor.execute("SELECT * FROM admins WHERE email = ?", (DEFAULT_ADMIN_EMAIL,))
+        cursor.execute("SELECT id FROM admins WHERE email = ?", (DEFAULT_ADMIN_EMAIL,))
         admin = cursor.fetchone()
 
-        if admin is None:
+        if admin is None and DEFAULT_ADMIN_EMAIL and DEFAULT_ADMIN_PASSWORD:
             cursor.execute(
                 "INSERT INTO admins (fullname, email, password) VALUES (?, ?, ?)",
                 (
                     "Default Admin",
-                    DEFAULT_ADMIN_EMAIL,
+                    DEFAULT_ADMIN_EMAIL.strip().lower(),
                     generate_password_hash(DEFAULT_ADMIN_PASSWORD),
                 ),
             )
@@ -90,6 +170,9 @@ def init_db():
         conn.commit()
 
 
+# =========================
+# Public Routes
+# =========================
 @app.route("/")
 def home():
     return render_template("index.html")
@@ -114,42 +197,69 @@ def doctors():
 def appointments():
     if request.method == "POST":
         data = {
-            "firstname": request.form.get("firstname", "").strip(),
-            "lastname": request.form.get("lastname", "").strip(),
-            "email": request.form.get("email", "").strip(),
-            "number": request.form.get("number", "").strip(),
-            "doctor": request.form.get("doctor", "").strip(),
-            "date": request.form.get("date", "").strip(),
-            "time": request.form.get("time", "").strip(),
-            "appointment_type": request.form.get("type", "").strip(),
-            "notes": request.form.get("notes", "").strip(),
+            "firstname": safe_strip(request.form.get("firstname")),
+            "lastname": safe_strip(request.form.get("lastname")),
+            "email": safe_strip(request.form.get("email")).lower(),
+            "number": safe_strip(request.form.get("number")),
+            "doctor": safe_strip(request.form.get("doctor")),
+            "date": safe_strip(request.form.get("date")),
+            "time": safe_strip(request.form.get("time")),
+            "appointment_type": safe_strip(request.form.get("type")),
+            "notes": safe_strip(request.form.get("notes")),
             "status": "Pending",
         }
 
-        conn = get_db_connection()
-        cursor = conn.cursor()
-        cursor.execute("""
-            INSERT INTO appointments
-            (firstname, lastname, email, number, doctor, date, time, appointment_type, notes, status)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        """, (
-            data["firstname"],
-            data["lastname"],
-            data["email"],
-            data["number"],
-            data["doctor"],
-            data["date"],
-            data["time"],
-            data["appointment_type"],
-            data["notes"],
-            data["status"],
-        ))
-        conn.commit()
-        conn.close()
+        if not all([
+            data["firstname"], data["lastname"], data["email"], data["number"],
+            data["doctor"], data["date"], data["time"], data["appointment_type"]
+        ]):
+            flash("Please fill all required appointment fields.", "error")
+            return redirect(url_for("appointments"))
+
+        if not is_valid_email(data["email"]):
+            flash("Invalid email address.", "error")
+            return redirect(url_for("appointments"))
+
+        if not is_valid_phone(data["number"]):
+            flash("Invalid phone number.", "error")
+            return redirect(url_for("appointments"))
+
+        if not is_valid_date(data["date"]):
+            flash("Invalid appointment date.", "error")
+            return redirect(url_for("appointments"))
+
+        if not is_valid_time(data["time"]):
+            flash("Invalid appointment time.", "error")
+            return redirect(url_for("appointments"))
+
+        try:
+            with get_db_connection() as conn:
+                cursor = conn.cursor()
+                cursor.execute("""
+                    INSERT INTO appointments
+                    (firstname, lastname, email, number, doctor, date, time, appointment_type, notes, status)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """, (
+                    data["firstname"],
+                    data["lastname"],
+                    data["email"],
+                    data["number"],
+                    data["doctor"],
+                    data["date"],
+                    data["time"],
+                    data["appointment_type"],
+                    data["notes"],
+                    data["status"],
+                ))
+                conn.commit()
+
+        except sqlite3.Error as e:
+            print("Appointment DB error:", e)
+            flash("Something went wrong while booking appointment.", "error")
+            return redirect(url_for("appointments"))
 
         subject = "📅 Appointment Request Received - LifeCare Clinic"
-        body = f"""
-Hello {data['firstname']} {data['lastname']},
+        body = f"""Hello {data['firstname']} {data['lastname']},
 
 Your appointment request has been received.
 
@@ -165,11 +275,7 @@ Our admin will review your request shortly.
 Thank you,
 LifeCare Clinic
 """
-
-        threading.Thread(
-            target=send_email,
-            args=(data["email"], subject, body)
-        ).start()
+        send_email_async(data["email"], subject, body)
 
         flash("📅 Appointment request sent!", "appointment")
         return redirect(url_for("home"))
@@ -181,25 +287,42 @@ LifeCare Clinic
 def contact():
     if request.method == "POST":
         data = {
-            "name": request.form.get("name", "").strip(),
-            "email": request.form.get("email", "").strip(),
-            "number": request.form.get("number", "").strip(),
-            "message": request.form.get("message", "").strip()
+            "name": safe_strip(request.form.get("name")),
+            "email": safe_strip(request.form.get("email")).lower(),
+            "number": safe_strip(request.form.get("number")),
+            "message": safe_strip(request.form.get("message"))
         }
 
-        conn = get_db_connection()
-        cursor = conn.cursor()
-        cursor.execute("""
-            INSERT INTO messages (name, email, number, message)
-            VALUES (?, ?, ?, ?)
-        """, (
-            data["name"],
-            data["email"],
-            data["number"],
-            data["message"]
-        ))
-        conn.commit()
-        conn.close()
+        if not all([data["name"], data["email"], data["number"], data["message"]]):
+            flash("Please fill all fields.", "error")
+            return redirect(url_for("contact"))
+
+        if not is_valid_email(data["email"]):
+            flash("Invalid email address.", "error")
+            return redirect(url_for("contact"))
+
+        if not is_valid_phone(data["number"]):
+            flash("Invalid phone number.", "error")
+            return redirect(url_for("contact"))
+
+        try:
+            with get_db_connection() as conn:
+                cursor = conn.cursor()
+                cursor.execute("""
+                    INSERT INTO messages (name, email, number, message)
+                    VALUES (?, ?, ?, ?)
+                """, (
+                    data["name"],
+                    data["email"],
+                    data["number"],
+                    data["message"]
+                ))
+                conn.commit()
+
+        except sqlite3.Error as e:
+            print("Contact DB error:", e)
+            flash("Something went wrong while sending message.", "error")
+            return redirect(url_for("contact"))
 
         flash("📤 Message successfully sent!", "message")
         return redirect(url_for("contact"))
@@ -210,18 +333,22 @@ def contact():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        email = request.form.get("email", "").strip()
-        password = request.form.get("password", "").strip()
+        email = safe_strip(request.form.get("email")).lower()
+        password = safe_strip(request.form.get("password"))
 
-        conn = None
+        if not email or not password:
+            flash("Please fill all fields.", "error")
+            return redirect(url_for("login"))
+
         try:
-            conn = sqlite3.connect(DB_NAME, timeout=10)
-            cursor = conn.cursor()
-            cursor.execute("SELECT name, password FROM users WHERE email = ?", (email,))
-            user = cursor.fetchone()
+            with get_db_connection() as conn:
+                cursor = conn.cursor()
+                cursor.execute("SELECT name, password FROM users WHERE email = ?", (email,))
+                user = cursor.fetchone()
 
-            if user and check_password_hash(user[1], password):
-                session["user"] = user[0]
+            if user and check_password_hash(user["password"], password):
+                session.clear()
+                session["user"] = user["name"]
                 flash("✅ Login successful!", "success")
                 return redirect(url_for("home"))
 
@@ -233,101 +360,120 @@ def login():
             flash("Login failed. Please try again.", "error")
             return redirect(url_for("login"))
 
-        finally:
-            if conn:
-                conn.close()
-
     return render_template("login.html")
 
 
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
     if request.method == "POST":
-        name = request.form.get("name", "").strip()
-        email = request.form.get("email", "").strip()
-        number = request.form.get("number", "").strip()
-        password = generate_password_hash(request.form.get("password", "").strip())
+        name = safe_strip(request.form.get("name"))
+        email = safe_strip(request.form.get("email")).lower()
+        number = safe_strip(request.form.get("number"))
+        raw_password = safe_strip(request.form.get("password"))
 
-        conn = None
+        if not name or not email or not number or not raw_password:
+            flash("Please fill all fields.", "error")
+            return redirect(url_for("signup"))
+
+        if not is_valid_email(email):
+            flash("Invalid email address.", "error")
+            return redirect(url_for("signup"))
+
+        if not is_valid_phone(number):
+            flash("Invalid phone number.", "error")
+            return redirect(url_for("signup"))
+
+        if not is_strong_password(raw_password):
+            flash("Password must be at least 8 characters.", "error")
+            return redirect(url_for("signup"))
+
+        password = generate_password_hash(raw_password)
+
         try:
-            conn = sqlite3.connect(DB_NAME, timeout=10)
-            cursor = conn.cursor()
+            with get_db_connection() as conn:
+                cursor = conn.cursor()
+                cursor.execute(
+                    "INSERT INTO users (name, email, number, password) VALUES (?, ?, ?, ?)",
+                    (name, email, number, password)
+                )
+                conn.commit()
 
-            cursor.execute(
-                "INSERT INTO users (name, email, number, password) VALUES (?, ?, ?, ?)",
-                (name, email, number, password)
-            )
-
-            conn.commit()
             flash("👤 Account created!", "account")
             return redirect(url_for("login"))
+
+        except sqlite3.IntegrityError:
+            flash("Email already registered.", "error")
+            return redirect(url_for("signup"))
 
         except sqlite3.Error as e:
             print("Signup DB error:", e)
             flash("Something went wrong during signup. Please try again.", "error")
             return redirect(url_for("signup"))
 
-        finally:
-            if conn:
-                conn.close()
-
     return render_template("signup.html")
 
 
 @app.route("/logout")
 def logout():
-    session.pop("user", None)
+    session.clear()
     return render_template("logout.html")
 
 
+# =========================
+# Admin Routes
+# =========================
 @app.route("/dashboard")
 def dashboard():
     if not session.get("admin_logged_in"):
         flash("⚠️ Admin login required", "error")
         return redirect(url_for("admin_login"))
 
-    search = request.args.get("search", "").strip()
+    search = safe_strip(request.args.get("search"))
 
-    conn = get_db_connection()
-    cursor = conn.cursor()
+    try:
+        with get_db_connection() as conn:
+            cursor = conn.cursor()
 
-    if search:
-        cursor.execute("""
-            SELECT * FROM appointments
-            WHERE firstname LIKE ?
-               OR lastname LIKE ?
-               OR doctor LIKE ?
-               OR date LIKE ?
-            ORDER BY date DESC, time ASC
-        """, (f"%{search}%", f"%{search}%", f"%{search}%", f"%{search}%"))
-    else:
-        cursor.execute("SELECT * FROM appointments ORDER BY date DESC, time ASC")
+            if search:
+                cursor.execute("""
+                    SELECT * FROM appointments
+                    WHERE firstname LIKE ?
+                       OR lastname LIKE ?
+                       OR doctor LIKE ?
+                       OR date LIKE ?
+                    ORDER BY date DESC, time ASC
+                """, (f"%{search}%", f"%{search}%", f"%{search}%", f"%{search}%"))
+            else:
+                cursor.execute("SELECT * FROM appointments ORDER BY date DESC, time ASC")
 
-    appointments = cursor.fetchall()
+            appointments_data = cursor.fetchall()
 
-    cursor.execute("SELECT COUNT(*) FROM appointments")
-    total = cursor.fetchone()[0]
+            cursor.execute("SELECT COUNT(*) AS count FROM appointments")
+            total = cursor.fetchone()["count"]
 
-    cursor.execute("SELECT COUNT(*) FROM appointments WHERE status='Pending'")
-    pending = cursor.fetchone()[0]
+            cursor.execute("SELECT COUNT(*) AS count FROM appointments WHERE status='Pending'")
+            pending = cursor.fetchone()["count"]
 
-    cursor.execute("SELECT COUNT(*) FROM appointments WHERE status='Approved'")
-    approved = cursor.fetchone()[0]
+            cursor.execute("SELECT COUNT(*) AS count FROM appointments WHERE status='Approved'")
+            approved = cursor.fetchone()["count"]
 
-    cursor.execute("SELECT COUNT(*) FROM appointments WHERE status='Cancelled'")
-    cancelled = cursor.fetchone()[0]
+            cursor.execute("SELECT COUNT(*) AS count FROM appointments WHERE status='Cancelled'")
+            cancelled = cursor.fetchone()["count"]
 
-    conn.close()
+        return render_template(
+            "dashboard.html",
+            appointments=appointments_data,
+            total=total,
+            pending=pending,
+            approved=approved,
+            cancelled=cancelled,
+            search=search
+        )
 
-    return render_template(
-        "dashboard.html",
-        appointments=appointments,
-        total=total,
-        pending=pending,
-        approved=approved,
-        cancelled=cancelled,
-        search=search
-    )
+    except sqlite3.Error as e:
+        print("Dashboard DB error:", e)
+        flash("Unable to load dashboard.", "error")
+        return redirect(url_for("admin_login"))
 
 
 @app.route("/dashboard/messages")
@@ -336,13 +482,18 @@ def messages():
         flash("⛔ Admin access required", "m-error")
         return redirect(url_for("admin_login"))
 
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM messages ORDER BY id DESC")
-    all_messages = cursor.fetchall()
-    conn.close()
+    try:
+        with get_db_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT * FROM messages ORDER BY id DESC")
+            all_messages = cursor.fetchall()
 
-    return render_template("messages.html", messages=all_messages)
+        return render_template("messages.html", messages=all_messages)
+
+    except sqlite3.Error as e:
+        print("Messages DB error:", e)
+        flash("Unable to load messages.", "m-error")
+        return redirect(url_for("dashboard"))
 
 
 @app.route("/dashboard/adddoctor")
@@ -357,22 +508,34 @@ def adddoctor():
 @app.route("/admin-login", methods=["GET", "POST"])
 def admin_login():
     if request.method == "POST":
-        email = request.form.get("email", "").strip()
-        password = request.form.get("password", "").strip()
+        email = safe_strip(request.form.get("email")).lower()
+        password = safe_strip(request.form.get("password"))
 
-        conn = get_db_connection()
-        cursor = conn.cursor()
-        cursor.execute("SELECT password FROM admins WHERE email = ?", (email,))
-        admin = cursor.fetchone()
-        conn.close()
+        if not email or not password:
+            flash("Please fill all fields.", "in-error")
+            return redirect(url_for("admin_login"))
 
-        if admin and check_password_hash(admin["password"], password):
-            session["admin_logged_in"] = True
-            flash("✅ Admin login successful!", "in-success")
-            return redirect(url_for("dashboard"))
+        try:
+            with get_db_connection() as conn:
+                cursor = conn.cursor()
+                cursor.execute("SELECT fullname, email, password FROM admins WHERE email = ?", (email,))
+                admin = cursor.fetchone()
 
-        flash("❌ Invalid admin credentials", "in-error")
-        return redirect(url_for("admin_login"))
+            if admin and check_password_hash(admin["password"], password):
+                session.clear()
+                session["admin_logged_in"] = True
+                session["admin_email"] = admin["email"]
+                session["admin_name"] = admin["fullname"]
+                flash("✅ Admin login successful!", "in-success")
+                return redirect(url_for("dashboard"))
+
+            flash("❌ Invalid admin credentials", "in-error")
+            return redirect(url_for("admin_login"))
+
+        except sqlite3.Error as e:
+            print("Admin login DB error:", e)
+            flash("❌ Admin login failed.", "in-error")
+            return redirect(url_for("admin_login"))
 
     return render_template("admin-login.html")
 
@@ -380,19 +543,32 @@ def admin_login():
 @app.route("/admin-signup", methods=["GET", "POST"])
 def admin_signup():
     if request.method == "POST":
-        fullname = request.form.get("fullname", "").strip()
-        email = request.form.get("email", "").strip()
-        password = generate_password_hash(request.form.get("password", "").strip())
+        fullname = safe_strip(request.form.get("fullname"))
+        email = safe_strip(request.form.get("email")).lower()
+        raw_password = safe_strip(request.form.get("password"))
+
+        if not fullname or not email or not raw_password:
+            flash("Please fill all fields.", "up-error")
+            return redirect(url_for("admin_signup"))
+
+        if not is_valid_email(email):
+            flash("Invalid email address.", "up-error")
+            return redirect(url_for("admin_signup"))
+
+        if not is_strong_password(raw_password):
+            flash("Password must be at least 8 characters.", "up-error")
+            return redirect(url_for("admin_signup"))
+
+        password = generate_password_hash(raw_password)
 
         try:
-            conn = get_db_connection()
-            cursor = conn.cursor()
-            cursor.execute(
-                "INSERT INTO admins (fullname, email, password) VALUES (?, ?, ?)",
-                (fullname, email, password)
-            )
-            conn.commit()
-            conn.close()
+            with get_db_connection() as conn:
+                cursor = conn.cursor()
+                cursor.execute(
+                    "INSERT INTO admins (fullname, email, password) VALUES (?, ?, ?)",
+                    (fullname, email, password)
+                )
+                conn.commit()
 
             flash("✅ Admin account created!", "up-success")
             return redirect(url_for("admin_login"))
@@ -401,40 +577,19 @@ def admin_signup():
             flash("❌ Admin email already registered!", "up-error")
             return redirect(url_for("admin_signup"))
 
+        except sqlite3.Error as e:
+            print("Admin signup DB error:", e)
+            flash("❌ Something went wrong during admin signup.", "up-error")
+            return redirect(url_for("admin_signup"))
+
     return render_template("admin-signup.html")
 
 
 @app.route("/admin-logout")
 def admin_logout():
-    session.pop("admin_logged_in", None)
+    session.clear()
     flash("🔐 Logged out from Admin.", "info")
     return redirect(url_for("admin_login"))
-
-
-def send_email(to_email, subject, body):
-    try:
-        sender_email = os.environ.get("SENDER_EMAIL")
-        sender_password = os.environ.get("SENDER_PASSWORD")
-
-        if not sender_email or not sender_password:
-            print("❌ Email credentials missing.")
-            return
-
-        msg = MIMEText(body)
-        msg["Subject"] = subject
-        msg["From"] = sender_email
-        msg["To"] = to_email
-
-        server = smtplib.SMTP("smtp.gmail.com", 587)
-        server.starttls()
-        server.login(sender_email, sender_password)
-        server.send_message(msg)
-        server.quit()
-
-        print("✅ Email sent to", to_email)
-
-    except Exception as e:
-        print("❌ Email error:", e)
 
 
 @app.route("/update_status/<int:id>", methods=["POST"])
@@ -443,37 +598,71 @@ def update_status(id):
         flash("⚠️ Admin login required", "error")
         return redirect(url_for("admin_login"))
 
-    new_status = request.form.get("status", "").strip()
+    new_status = safe_strip(request.form.get("status"))
 
-    conn = get_db_connection()
-    cursor = conn.cursor()
+    if new_status not in ALLOWED_STATUSES:
+        flash("Invalid status selected.", "error")
+        return redirect(url_for("dashboard"))
 
-    cursor.execute(
-        "UPDATE appointments SET status = ? WHERE id = ?",
-        (new_status, id)
-    )
+    try:
+        with get_db_connection() as conn:
+            cursor = conn.cursor()
 
-    cursor.execute("SELECT email FROM appointments WHERE id = ?", (id,))
-    row = cursor.fetchone()
+            cursor.execute("SELECT * FROM appointments WHERE id = ?", (id,))
+            appointment = cursor.fetchone()
 
-    conn.commit()
-    conn.close()
+            if not appointment:
+                flash("Appointment not found.", "error")
+                return redirect(url_for("dashboard"))
 
-    email = row["email"] if row else None
+            cursor.execute(
+                "UPDATE appointments SET status = ? WHERE id = ?",
+                (new_status, id)
+            )
+            conn.commit()
 
-    if email:
-        if new_status.lower() == "approved":
-            subject = "✅ Appointment Approved - LifeCare Clinic"
-            body = "Your appointment has been approved."
-            threading.Thread(target=send_email, args=(email, subject, body)).start()
+        email = appointment["email"]
 
-        elif new_status.lower() == "cancelled":
-            subject = "❌ Appointment Cancelled - LifeCare Clinic"
-            body = "Your appointment has been cancelled."
-            threading.Thread(target=send_email, args=(email, subject, body)).start()
+        if email:
+            if new_status == "Approved":
+                subject = "✅ Appointment Approved - LifeCare Clinic"
+                body = f"""Hello {appointment['firstname']} {appointment['lastname']},
 
-    flash("Status updated", "s-updated")
-    return redirect(url_for("dashboard"))
+Your appointment has been approved.
+
+Doctor: {appointment['doctor']}
+Date: {appointment['date']}
+Time: {appointment['time']}
+Status: {new_status}
+
+Thank you,
+LifeCare Clinic
+"""
+                send_email_async(email, subject, body)
+
+            elif new_status == "Cancelled":
+                subject = "❌ Appointment Cancelled - LifeCare Clinic"
+                body = f"""Hello {appointment['firstname']} {appointment['lastname']},
+
+Your appointment has been cancelled.
+
+Doctor: {appointment['doctor']}
+Date: {appointment['date']}
+Time: {appointment['time']}
+Status: {new_status}
+
+Thank you,
+LifeCare Clinic
+"""
+                send_email_async(email, subject, body)
+
+        flash("Status updated", "s-updated")
+        return redirect(url_for("dashboard"))
+
+    except sqlite3.Error as e:
+        print("Update status DB error:", e)
+        flash("Could not update status.", "error")
+        return redirect(url_for("dashboard"))
 
 
 @app.route("/delete_appointment/<int:id>", methods=["POST"])
@@ -482,17 +671,32 @@ def delete_appointment(id):
         flash("⚠️ Admin login required", "error")
         return redirect(url_for("admin_login"))
 
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    cursor.execute("DELETE FROM appointments WHERE id = ?", (id,))
-    conn.commit()
-    conn.close()
+    try:
+        with get_db_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT id FROM appointments WHERE id = ?", (id,))
+            appointment = cursor.fetchone()
 
-    flash("Appointment deleted", "s-deleted")
-    return redirect(url_for("dashboard"))
+            if not appointment:
+                flash("Appointment not found.", "error")
+                return redirect(url_for("dashboard"))
+
+            cursor.execute("DELETE FROM appointments WHERE id = ?", (id,))
+            conn.commit()
+
+        flash("Appointment deleted", "s-deleted")
+        return redirect(url_for("dashboard"))
+
+    except sqlite3.Error as e:
+        print("Delete appointment DB error:", e)
+        flash("Could not delete appointment.", "error")
+        return redirect(url_for("dashboard"))
 
 
+# =========================
+# Start App
+# =========================
 init_db()
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=10000)
+    app.run(host="0.0.0.0", port=10000, debug=False)

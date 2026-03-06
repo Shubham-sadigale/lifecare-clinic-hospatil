@@ -12,7 +12,7 @@ app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "shubham_secret_2026_123")
 
 WEBHOOK_SECRET = os.environ.get("WEBHOOK_SECRET", "shubham_webhook_2026_123")
-DB_NAME = os.environ.get("DB_NAME", "shubham_hospital.db")
+DB_NAME = os.environ.get("DB_NAME", "shubham_hospital2.db")
 
 DEFAULT_ADMIN_EMAIL = os.environ.get("DEFAULT_ADMIN_EMAIL", "sadigaleshubham8@gmail.com")
 DEFAULT_ADMIN_PASSWORD = os.environ.get("DEFAULT_ADMIN_PASSWORD", "admin123")
@@ -27,12 +27,13 @@ def get_db_connection():
 def init_db():
     with sqlite3.connect(DB_NAME, timeout=10) as conn:
         cursor = conn.cursor()
+        cursor.execute("PRAGMA journal_mode=WAL;")
 
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS users (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 name TEXT NOT NULL,
-                email TEXT UNIQUE NOT NULL,
+                email TEXT NOT NULL,
                 number TEXT NOT NULL,
                 password TEXT NOT NULL
             )
@@ -188,19 +189,29 @@ def login():
         email = request.form.get("email", "").strip()
         password = request.form.get("password", "").strip()
 
-        conn = get_db_connection()
-        cursor = conn.cursor()
-        cursor.execute("SELECT name, password FROM users WHERE email = ?", (email,))
-        user = cursor.fetchone()
-        conn.close()
+        conn = None
+        try:
+            conn = sqlite3.connect(DB_NAME, timeout=10)
+            cursor = conn.cursor()
+            cursor.execute("SELECT name, password FROM users WHERE email = ?", (email,))
+            user = cursor.fetchone()
 
-        if user and check_password_hash(user["password"], password):
-            session["user"] = user["name"]
-            flash("✅ Login successful!", "success")
-            return redirect(url_for("home"))
+            if user and check_password_hash(user[1], password):
+                session["user"] = user[0]
+                flash("✅ Login successful!", "success")
+                return redirect(url_for("home"))
 
-        flash("❌ Invalid credentials", "error")
-        return redirect(url_for("login"))
+            flash("❌ Invalid credentials", "error")
+            return redirect(url_for("login"))
+
+        except sqlite3.Error as e:
+            print("Login DB error:", e)
+            flash("Login failed. Please try again.", "error")
+            return redirect(url_for("login"))
+
+        finally:
+            if conn:
+                conn.close()
 
     return render_template("login.html")
 
@@ -213,22 +224,28 @@ def signup():
         number = request.form.get("number", "").strip()
         password = generate_password_hash(request.form.get("password", "").strip())
 
+        conn = None
         try:
-            conn = get_db_connection()
+            conn = sqlite3.connect(DB_NAME, timeout=10)
             cursor = conn.cursor()
+
             cursor.execute(
                 "INSERT INTO users (name, email, number, password) VALUES (?, ?, ?, ?)",
                 (name, email, number, password)
             )
-            conn.commit()
-            conn.close()
 
+            conn.commit()
             flash("👤 Account created!", "account")
             return redirect(url_for("login"))
 
-        except sqlite3.IntegrityError:
-            flash("Email already registered!", "error")
+        except sqlite3.Error as e:
+            print("Signup DB error:", e)
+            flash("Something went wrong during signup. Please try again.", "error")
             return redirect(url_for("signup"))
+
+        finally:
+            if conn:
+                conn.close()
 
     return render_template("signup.html")
 

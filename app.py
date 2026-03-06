@@ -147,6 +147,30 @@ def appointments():
         conn.commit()
         conn.close()
 
+        subject = "📅 Appointment Request Received - LifeCare Clinic"
+        body = f"""
+Hello {data['firstname']} {data['lastname']},
+
+Your appointment request has been received.
+
+Doctor: {data['doctor']}
+Date: {data['date']}
+Time: {data['time']}
+Appointment Type: {data['appointment_type']}
+
+Status: Pending
+
+Our admin will review your request shortly.
+
+Thank you,
+LifeCare Clinic
+"""
+
+        threading.Thread(
+            target=send_email,
+            args=(data["email"], subject, body)
+        ).start()
+
         flash("📅 Appointment request sent!", "appointment")
         return redirect(url_for("home"))
 
@@ -262,13 +286,48 @@ def dashboard():
         flash("⚠️ Admin login required", "error")
         return redirect(url_for("admin_login"))
 
+    search = request.args.get("search", "").strip()
+
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM appointments ORDER BY date DESC, time ASC")
+
+    if search:
+        cursor.execute("""
+            SELECT * FROM appointments
+            WHERE firstname LIKE ?
+               OR lastname LIKE ?
+               OR doctor LIKE ?
+               OR date LIKE ?
+            ORDER BY date DESC, time ASC
+        """, (f"%{search}%", f"%{search}%", f"%{search}%", f"%{search}%"))
+    else:
+        cursor.execute("SELECT * FROM appointments ORDER BY date DESC, time ASC")
+
     appointments = cursor.fetchall()
+
+    cursor.execute("SELECT COUNT(*) FROM appointments")
+    total = cursor.fetchone()[0]
+
+    cursor.execute("SELECT COUNT(*) FROM appointments WHERE status='Pending'")
+    pending = cursor.fetchone()[0]
+
+    cursor.execute("SELECT COUNT(*) FROM appointments WHERE status='Approved'")
+    approved = cursor.fetchone()[0]
+
+    cursor.execute("SELECT COUNT(*) FROM appointments WHERE status='Cancelled'")
+    cancelled = cursor.fetchone()[0]
+
     conn.close()
 
-    return render_template("dashboard.html", appointments=appointments)
+    return render_template(
+        "dashboard.html",
+        appointments=appointments,
+        total=total,
+        pending=pending,
+        approved=approved,
+        cancelled=cancelled,
+        search=search
+    )
 
 
 @app.route("/dashboard/messages")

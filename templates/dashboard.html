@@ -48,6 +48,82 @@
       to { opacity: 1; top: 120px; }
     }
 
+    .stats-container {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      margin: 20px 0;
+    }
+
+    .stat-card {
+      min-width: 170px;
+      padding: 15px 20px;
+      border-radius: 10px;
+      font-weight: 600;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .stat-total {
+      background: #f5f2ff;
+      color: #1a1f2c;
+    }
+
+    .stat-pending {
+      background: #fff9cc;
+      color: #8a6d00;
+    }
+
+    .stat-approved {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .stat-cancelled {
+      background: #f8d7da;
+      color: #721c24;
+    }
+
+    .search-form {
+      margin: 20px 0;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .search-form input {
+      padding: 10px 14px;
+      width: 320px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      outline: none;
+    }
+
+    .search-btn {
+      padding: 10px 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background-color: rgba(155, 135, 245, 1);
+      color: white;
+      font-weight: 600;
+    }
+
+    .search-btn:hover {
+      background-color: rgba(155, 135, 245, 0.85);
+    }
+
+    .clear-btn {
+      padding: 10px 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background-color: #e9ecef;
+      color: #222;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
     .select-status {
       padding: 6px 12px;
       border-radius: 6px;
@@ -176,6 +252,24 @@
 
   <div class="container">
     <h2>📋 All Appointments</h2>
+
+    <div class="stats-container">
+      <div class="stat-card stat-total">Total Appointments: {{ total }}</div>
+      <div class="stat-card stat-pending">Pending: {{ pending }}</div>
+      <div class="stat-card stat-approved">Approved: {{ approved }}</div>
+      <div class="stat-card stat-cancelled">Cancelled: {{ cancelled }}</div>
+    </div>
+
+    <form method="GET" action="{{ url_for('dashboard') }}" class="search-form">
+      <input
+        type="text"
+        name="search"
+        value="{{ search }}"
+        placeholder="Search by patient name, doctor, or date"
+      >
+      <button type="submit" class="search-btn">Search</button>
+      <a href="{{ url_for('dashboard') }}" class="clear-btn">Clear</a>
+    </form>
 
     <table>
       <thead>

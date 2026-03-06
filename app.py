@@ -1,6 +1,5 @@
 import os
 import re
-import threading
 import sqlite3
 import smtplib
 from email.mime.text import MIMEText
@@ -16,10 +15,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "change-this-in-production-very-strong-secret-key")
 
-DB_NAME = os.environ.get("DB_NAME", "shubham_hospital3.db")
-
-DEFAULT_ADMIN_EMAIL = os.environ.get("DEFAULT_ADMIN_EMAIL", "sadigaleshubham8@gmail.com")
-DEFAULT_ADMIN_PASSWORD = os.environ.get("DEFAULT_ADMIN_PASSWORD", "ChangeAdminPassword123!")
+DB_NAME = os.environ.get("DB_NAME", "shubham_hospital4.db")
 
 ALLOWED_STATUSES = {"Pending", "Approved", "Cancelled"}
 
@@ -84,9 +80,15 @@ def send_email(to_email, subject, body):
         sender_email = os.environ.get("SENDER_EMAIL")
         sender_password = os.environ.get("SENDER_PASSWORD")
 
+        print("=== EMAIL DEBUG START ===")
+        print("TO EMAIL:", to_email)
+        print("SENDER EMAIL:", sender_email)
+        print("PASSWORD EXISTS:", bool(sender_password))
+
         if not sender_email or not sender_password:
             print("❌ Email credentials missing.")
-            return
+            print("=== EMAIL DEBUG END ===")
+            return False
 
         msg = MIMEText(body)
         msg["Subject"] = subject
@@ -99,14 +101,13 @@ def send_email(to_email, subject, body):
             server.send_message(msg)
 
         print("✅ Email sent to", to_email)
+        print("=== EMAIL DEBUG END ===")
+        return True
 
     except Exception as e:
         print("❌ Email error:", e)
-
-
-def send_email_async(to_email, subject, body):
-    thread = threading.Thread(target=send_email, args=(to_email, subject, body), daemon=True)
-    thread.start()
+        print("=== EMAIL DEBUG END ===")
+        return False
 
 
 # =========================
@@ -162,19 +163,6 @@ def init_db():
             )
         """)
 
-        cursor.execute("SELECT id FROM admins WHERE email = ?", (DEFAULT_ADMIN_EMAIL.strip().lower(),))
-        admin = cursor.fetchone()
-
-        if admin is None and DEFAULT_ADMIN_EMAIL and DEFAULT_ADMIN_PASSWORD:
-            cursor.execute(
-                "INSERT INTO admins (fullname, email, password) VALUES (?, ?, ?)",
-                (
-                    "Default Admin",
-                    DEFAULT_ADMIN_EMAIL.strip().lower(),
-                    generate_password_hash(DEFAULT_ADMIN_PASSWORD),
-                ),
-            )
-
         conn.commit()
 
 
@@ -216,6 +204,8 @@ def appointments():
             "notes": safe_strip(request.form.get("notes")),
             "status": "Pending",
         }
+
+        print("TIME FROM FORM =", repr(data["time"]))
 
         if not all([
             data["firstname"], data["lastname"], data["email"], data["number"],
@@ -283,7 +273,7 @@ Our admin will review your request shortly.
 Thank you,
 LifeCare Clinic
 """
-        send_email_async(data["email"], subject, body)
+        send_email(data["email"], subject, body)
 
         flash("📅 Appointment request sent!", "appointment")
         return redirect(url_for("home"))
@@ -629,7 +619,9 @@ def update_status(id):
             )
             conn.commit()
 
-        email = appointment["email"]
+        email = safe_strip(appointment["email"])
+        print("UPDATE STATUS DEBUG -> STATUS:", new_status)
+        print("UPDATE STATUS DEBUG -> EMAIL:", email)
 
         if email:
             if new_status == "Approved":
@@ -646,7 +638,7 @@ Status: {new_status}
 Thank you,
 LifeCare Clinic
 """
-                send_email_async(email, subject, body)
+                send_email(email, subject, body)
 
             elif new_status == "Cancelled":
                 subject = "❌ Appointment Cancelled - LifeCare Clinic"
@@ -662,7 +654,7 @@ Status: {new_status}
 Thank you,
 LifeCare Clinic
 """
-                send_email_async(email, subject, body)
+                send_email(email, subject, body)
 
         flash("Status updated", "s-updated")
         return redirect(url_for("dashboard"))

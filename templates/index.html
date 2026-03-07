@@ -40,6 +40,7 @@
                 opacity: 0;
                 top: 60px;
             }
+
             to {
                 opacity: 1;
                 top: 120px;
@@ -101,8 +102,11 @@
                 <p class="tagline">
                     Providing compassionate and comprehensive healthcare with state of the art facilities and experienced professionals.
                 </p>
-                <a class="appointment-btn" href="{{ url_for('appointments') }}">Book an Appointment</a>
-                <a href="{{ url_for('doctors') }}" class="doctors-btn">Our Doctors</a>
+
+                <div class="hero-buttons">
+                    <a class="appointment-btn" href="{{ url_for('appointments') }}">Book an Appointment</a>
+                    <a href="{{ url_for('doctors') }}" class="doctors-btn">Our Doctors</a>
+                </div>
             </div>
 
             <div class="hero-image">
